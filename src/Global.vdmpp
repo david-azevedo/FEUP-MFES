@@ -21,12 +21,11 @@ operations
 	--Removes a new user with a specific name.
 	public removeUser: Types`String ==> ()
 	removeUser(name) == (
-		dcl head: Types`Users := {};
 		for all user in set users do
 			if(user.name = name) then
 				users := users \ {user};
 	)
-	pre card users > 0 and forall u in set users & u.name = name
+	pre card users > 0 and exists1 u in set users & u.name = name
 	post forall u in set users & u.name <> name;
 	
 	--Lists all the users known.
@@ -46,7 +45,7 @@ operations
 				return user;
 		return nil;
 	)
-	pre card users > 0 and forall u in set users & u.name = name
+	pre card users > 0 and exists1 u in set users & u.name = name
 	post card users = card users~;
 	
 functions
