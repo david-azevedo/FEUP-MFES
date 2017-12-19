@@ -1,0 +1,20 @@
+class User
+types
+values
+	
+instance variables
+	public name: Types`String;
+	
+operations
+	public User: Types`String ==> User
+	User(n) == (
+		name := n;
+		return self
+	)
+	post name = n
+	
+functions
+-- TODO Define functiones here
+traces
+-- TODO Define Combinatorial Test Traces here
+end User

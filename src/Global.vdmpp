@@ -1,0 +1,57 @@
+class Global
+types
+	
+values
+	
+instance variables
+	
+	private users: Types`Users;
+	
+operations
+	
+	--Global constructor/
+	public Global: () ==> Global
+	Global() == (users:= {}; return self);
+	
+	--Adds a new user tied with a name.
+	public addUser: Types`String ==> ()
+	addUser(name) == (users := users union {new User(name)})
+	pre forall u in set users & u.name <> name;
+	
+	--Removes a new user with a specific name.
+	public removeUser: Types`String ==> ()
+	removeUser(name) == (
+		dcl head: Types`Users := {};
+		for all user in set users do
+			if(user.name = name) then
+				users := users \ {user};
+	)
+	pre card users > 0 and forall u in set users & u.name = name
+	post forall u in set users & u.name <> name;
+	
+	--Lists all the users known.
+	public listUsers: () ==> Types`StringList
+	listUsers() == (
+		dcl result: Types`StringList := [];
+		for all user in set users do 
+			result := result ^ [user.name];
+		return result;
+	);
+	
+	--Returns a specific user.
+	public getUser: Types`String ==> [User]
+	getUser(name) == (
+		for all user in set users do
+			if user.name = name then
+				return user;
+		return nil;
+	)
+	pre card users > 0 and forall u in set users & u.name = name
+	post card users = card users~;
+	
+functions
+	
+	
+traces
+	
+end Global

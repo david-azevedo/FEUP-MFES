@@ -1,0 +1,37 @@
+class Types
+types
+	public String = seq of char;
+	
+	public Timestamp :: hour: nat
+											minute: nat
+											seconds: nat;
+											
+	public Point :: lat: real
+									lon: real;
+									
+	public Route :: name: String
+									route: seq1 of Point;
+	
+	public TopWorkout = inmap Route to Workout;
+	
+	public Challenges = set of Challenge;
+	
+	public RouteToWorkouts = map Route to seq of Workout;
+	
+	public Users = set of User;
+	
+	public StringList = seq of String;
+	
+	public Rank = <Lazy> | <Normal> | <Active> | <SuperFit> | <ForrestGump>;
+						
+values
+-- TODO Define values here
+instance variables
+-- TODO Define instance variables here
+operations
+-- TODO Define operations here
+functions
+-- TODO Define functiones here
+traces
+-- TODO Define Combinatorial Test Traces here
+end Types
