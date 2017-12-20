@@ -9,8 +9,7 @@ types
 		inv t == t.hour <= 23 and t.minutes <= 59 and t.seconds <= 59;
 											
 	public Point :: lat: real
-									lon: real;
-									
+									lon: real;	
 	public Route :: name: String
 									route: seq of Point;
 	
@@ -19,6 +18,8 @@ types
 	public ChallengeSet = set of Challenge;
 	
 	public RouteToWorkouts = map Route to seq of Workout;
+	
+	public RouteToNat = map Route to nat;
 	
 	public UserSet = set of User;
 	

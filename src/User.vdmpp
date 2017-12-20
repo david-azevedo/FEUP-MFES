@@ -7,6 +7,7 @@ instance variables
 	public name: Types`String;
 	private friends: Types`UserSet;
 	private routes: Types`RouteToWorkouts;
+	private top: Types`TopWorkout;
 	private currentWorkout: [Workout];
 	private global : [Global];
 	private statistics: Statistics;
@@ -27,6 +28,7 @@ operations
 		currentWorkout := nil;
 		global:= g;
 		friends := {};
+		top := {|->};
 		routes := {|->};
 		name := n;
 		statistics := new Statistics();
@@ -130,10 +132,11 @@ operations
 			currentWorkout := new WorkoutNew(time, route);
 			);
 	)
-	post	(isofbaseclass(WorkoutExisting, currentWorkout) 
+	post ((isofclass(WorkoutExisting, currentWorkout)
+					and
+					exists1 route in set dom routes & route.name =  routeName)
 			 	or
-				isofbaseclass(WorkoutNew, currentWorkout))
-				and currentWorkout <> nil;
+				isofclass(WorkoutNew, currentWorkout));
 
 
 	--Cancels the current workout
@@ -155,12 +158,99 @@ operations
 	post currentWorkout <> nil;
 	
 	
+	--Update Top
+	private updateTop: Workout ==> ()
+	updateTop (workout) ==
+	(
+		dcl pair : Types`TopWorkout := 
+			{workout.getRoute()} <: top;
+		
+		if pair <> {|->} then
+			(if exists1 t in set (rng pair) & 
+					Math`timeToSeconds(t.calculateTime()) > 
+					Math`timeToSeconds(workout.calculateTime()) then
+				top := top ++ {workout.getRoute() |-> workout};)
+		else
+			top := top ++ {workout.getRoute() |-> workout};
+	)
+	post card dom top >= card dom top~;
+	
+	
+	--Stores current workout
+	private storeCurrentWorkout: () ==> ()
+	storeCurrentWorkout() ==
+	(
+		dcl r1 : Types`Route := currentWorkout.getRoute();
+		dcl pair : Types`RouteToWorkouts :=
+			{currentWorkout.getRoute()} <: routes;
+		
+		updateTop(currentWorkout);
+		
+		if pair <> {|->} then
+			for all e in set rng pair do
+			routes := routes ++ 
+								{r1 |-> e ^ [currentWorkout]}	
+		else
+			routes := routes ++ {r1 |-> [currentWorkout]};
+	)
+	post card dom routes >= card dom routes~;
+	
+	
+	--Get Routes Performed
+	public getRoutesPerformed: () ==> Types`RouteToNat
+	getRoutesPerformed() ==
+	(
+		dcl res : Types`RouteToNat := {|->};
+		
+		for all route in set dom routes do
+			for all workouts in set rng ({route} <: routes) do
+				res := res ++ {route |-> len workouts};		
+		
+		return res;	
+	)
+	post card dom RESULT = card dom routes;
+	
+	
+	--Get Top
+	public getTop: () ==> Types`RouteToNat
+	getTop() ==
+	(
+		dcl res : Types`RouteToNat := {|->};
+		
+		for all route in set dom top do
+			for all workout in set rng ({route} <: top) do
+				res := res ++ {route |-> Math`timeToSeconds(workout.calculateTime())};		
+		
+		return res;	
+	)
+	post card dom RESULT = card dom top;
+	
+	--List Routes
+	public listRoutes: () ==> Types`StringSeq
+	listRoutes() ==
+	(
+		dcl res: Types`StringSeq := [];
+		
+		for all e in set dom routes do
+			res:= res ^ [e.name];
+		
+		return res;
+	)
+	post routes = routes~;
+	
+	
 	--Finishes the current workout
 	public finishCurrentWorkout: nat ==> ()
 	finishCurrentWorkout(time) ==
-		currentWorkout.finish(Math`secondsToTime(time))
+	(
+		currentWorkout.finish(Math`secondsToTime(time));
+		if currentWorkout.isFinished() then
+			storeCurrentWorkout();
+		
+		currentWorkout := nil;
+	)
 	pre currentWorkout <> nil
-	post currentWorkout <> nil;
+	post currentWorkout = nil;
 	
 functions
 -- TODO Define functiones here

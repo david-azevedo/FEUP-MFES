@@ -13,6 +13,7 @@ operations
 	test () ==
 	(
 		testFriendship();
+		testWorkouts();
 	);
 	
 	public testFriendship: () ==> ()
@@ -23,11 +24,11 @@ operations
 		--Fill Global With Users()
 		global.clear();
 		
-		global.addUser("João Ferreira");
+		global.addUser("Joï¿½o Ferreira");
 		global.addUser("David Azevedo");
 		
 		--Retrive User:
-		user := global.getUser("João Ferreira");
+		user := global.getUser("Joï¿½o Ferreira");
 		
 		--Add Friend
 		user.addFriend("David Azevedo");
@@ -44,6 +45,91 @@ operations
 		assertTrue(len stringList = 0);
 		
 	);
+	
+	public testWorkouts: () ==> ()
+	testWorkouts() ==
+	(
+		dcl user : [User] := nil;
+		
+		--Clear users
+		global.clear();
+		
+		--Setup User
+		global.addUser("Carlos");
+		
+		user:= global.getUser("Carlos");
+		
+		--Routes and tops must be empty
+		assertTrue( elems user.listRoutes() = {});
+		assertTrue( dom user.getTop() = {});
+		assertTrue( dom user.getRoutesPerformed() = {});
+		
+		--Start a new Workout
+		
+		user.startWorkout("Route1", 20);
+		
+		--Routes and tops still must be empty
+		assertTrue( elems user.listRoutes() = {});
+		assertTrue( dom user.getTop() = {});
+		assertTrue( dom user.getRoutesPerformed() = {});
+		
+		--Create Route
+		user.updateByGPS(mk_Types`Point(0,0));
+		
+		user.updateByGPS(mk_Types`Point(0,40));
+		
+		--Finish
+		user.finishCurrentWorkout(40);
+		
+		--Routes and tops still must be empty
+		assertTrue( elems user.listRoutes() = {"Route1"});
+		assertTrue( rng user.getTop() = {20});
+		assertTrue( rng user.getRoutesPerformed() = {1});
+		
+		--Repeat route
+		user.startWorkout("Route1", 20);
+		
+		--Create Route
+		user.updateByGPS(mk_Types`Point(0,0));
+		
+		user.updateByGPS(mk_Types`Point(0,40));
+		
+		--Finish with better time
+		user.finishCurrentWorkout(30);
+		
+		--Routes and tops still must be empty
+		assertTrue( elems user.listRoutes() = {"Route1"});
+		assertTrue( rng user.getTop() = {10});
+		assertTrue( rng user.getRoutesPerformed() = {2});
+		
+		
+		--Start new route
+		user.startWorkout("Route2", 20);
+		
+		--Create Route
+		user.updateByGPS(mk_Types`Point(0,0));
+		
+		user.updateByGPS(mk_Types`Point(0,40));
+		
+		--Cancel
+		user.cancelCurrentWorkout();
+		
+		--Routes and tops still must be empty
+		assertTrue( elems user.listRoutes() = {"Route1"});
+		assertTrue( rng user.getTop() = {10});
+		assertTrue( rng user.getRoutesPerformed() = {2});
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		global.clear();
+	);
+	
 
 functions
 traces
