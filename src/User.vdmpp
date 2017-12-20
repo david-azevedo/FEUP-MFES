@@ -4,14 +4,23 @@ values
 	
 instance variables
 	public name: Types`String;
-	
+	private friends: Types`Users;
+	private global : [Global];
 operations
-	public User: Types`String ==> User
-	User(n) == (
+
+	--User's constructor
+	public User: Types`String * Global ==> User
+	User(n, g) == (
+		global:= g;
+		friends := {};
 		name := n;
 		return self
 	)
-	post name = n
+	post name = n;
+	
+	--Add a friend to the user
+
+	
 	
 functions
 -- TODO Define functiones here

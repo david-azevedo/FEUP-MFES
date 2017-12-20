@@ -1,0 +1,50 @@
+class GlobalTests is subclass of Test
+instance variables
+	private global : Global := new Global();
+
+operations
+	
+	-- Tests the functionaly of the class Global
+	public test: () ==> ()
+	test () ==
+	(
+		dcl users : Types`StringList := [];
+		dcl user : [User] := nil;
+		dcl elements : nat := 0;
+		
+		global.clear();
+		
+		--Test if can add and list users
+		global.addUser("João Ferreira");
+		global.addUser("David Azevedo");
+		
+		users := global.listUsers();
+		assertTrue(len users = 2);
+		assertTrue("João Ferreira" in set elems users);
+		assertTrue("David Azevedo" in set elems users);
+		
+		--Test if can remove users
+		global.removeUser("João Ferreira");
+		users := global.listUsers();
+		assertTrue(len users = 1);
+		assertTrue(not "João Ferreira" in set elems users);
+		assertTrue("David Azevedo" in set elems users);
+		
+		--Test the retreival of a user
+		user := global.getUser("David Azevedo");
+		assertTrue(user <> nil);
+		assertTrue(user.name = "David Azevedo");
+					
+		user := global.getUser("Dont Exist");
+		assertTrue(user = nil);
+		
+		--Test clear
+		elements := len global.listUsers();
+		global.clear();
+		assertTrue(elements <> len global.listUsers());
+		assertTrue(len global.listUsers() = 0);
+	);
+	
+functions
+traces
+end GlobalTests

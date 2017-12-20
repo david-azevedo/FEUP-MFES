@@ -15,7 +15,7 @@ operations
 	
 	--Adds a new user tied with a name.
 	public addUser: Types`String ==> ()
-	addUser(name) == (users := users union {new User(name)})
+	addUser(name) == (users := users union {new User(name, self)})
 	pre forall u in set users & u.name <> name;
 	
 	--Removes a new user with a specific name.
@@ -45,8 +45,14 @@ operations
 				return user;
 		return nil;
 	)
-	pre card users > 0 and exists1 u in set users & u.name = name
 	post card users = card users~;
+	
+	public clear: () ==> ()
+	clear() == 
+	(
+			users := {};
+	)
+	post card users = 0;
 	
 functions
 	
