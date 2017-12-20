@@ -11,6 +11,7 @@ operations
 	public WorkoutNew: Types`Timestamp * Types`Route ==> WorkoutNew
 	WorkoutNew(t, r) == (
 		traveledDistance := 0;
+		threshold := 10;
 		route:= r;
 		atomic (
 		startTime:= t;
@@ -26,6 +27,10 @@ operations
 	(
 		return true;
 	);
+	
+	--Returns last point
+	public getLastPoint: () ==> [Types`Point]
+	getLastPoint() == return mk_Types`Point(0,0);
 	
 	--Receives a new GPS Position
 	public newGPSPosition: Types`Point ==> ()

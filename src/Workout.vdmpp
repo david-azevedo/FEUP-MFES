@@ -8,6 +8,7 @@ instance variables
 	protected traveledDistance: nat;
 	protected startTime: Types`Timestamp;
 	protected endTime: Types`Timestamp;
+	protected threshold: nat;
 	
 	inv Math`timeToSeconds(startTime) <= Math`timeToSeconds(endTime);
 	
@@ -25,6 +26,10 @@ operations
 	public getDistance: () ==> nat
 	getDistance() == is subclass responsibility;
 	
+	--Returns last point
+	public getLastPoint: () ==> [Types`Point]
+	getLastPoint() == is subclass responsibility;
+	
 	--Returns the route of an task
 	public getRoute: () ==> Types`Route
 	getRoute() == 
@@ -32,6 +37,23 @@ operations
 		return route;
 	);
 	
+	--Checks if outside of threshold
+	protected outsideOfThreshold: Types`Point ==> bool
+	outsideOfThreshold (point) ==
+	(
+		if getLastPoint() = nil then
+			return false;
+		return Math`distance(point, getLastPoint()) > threshold;
+	);
+	
+	--Checks if inside of threshold
+	protected insideOfThreshold: Types`Point ==> bool
+	insideOfThreshold (point) ==
+	(
+		if getLastPoint() = nil then
+			return false;
+		return Math`distance(point, getLastPoint()) <= threshold;
+	);
 	
 functions
 -- TODO Define functiones here
