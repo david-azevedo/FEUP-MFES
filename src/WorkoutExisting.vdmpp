@@ -6,6 +6,8 @@ values
 instance variables
 	private remainingRoute: Types`Route;
 	private lastPoint: [Types`Point];
+	private traveledDistance: real;
+	
 	
 operations
 
@@ -25,35 +27,60 @@ operations
 	)
 	post startTime = endTime and startTime = t;
 	
-	
+	--Checks if the workout is finished
 	public isFinished: () ==> bool
 	isFinished() == 
 	(
-		return true;
-	);
+		return len remainingRoute.route = 0
+	)
+	pre len remainingRoute.route >= 0
+	post len remainingRoute.route >= 0;
 	
 	--Returns last point
 	public getLastPoint: () ==> [Types`Point]
 	getLastPoint() ==
 	(
-		if len route.route = 0 then
-			return nil
+		if len remainingRoute.route > 0 then
+			return hd remainingRoute.route
 		else
-			return route.route(len route.route)
+			return nil;
 	);
 	
+	--Updates the distance made by the user
+	private updateDistance: Types`Point ==> ()
+	updateDistance (point) ==
+	(
+		if lastPoint <> nil then
+			traveledDistance := traveledDistance + 
+													Math`distance(lastPoint, point);
+		
+		lastPoint := point;
+	)
+	post lastPoint <> nil;
 	
+	
+	--Updates the state of the workout given a GPS update
 	public newGPSPosition: Types`Point ==> ()
 	newGPSPosition(point) == 
 	(
-		return;
-	);
+		if insideOfThreshold(point) then
+		(
+			updateDistance(point);
+			remainingRoute.route := tl remainingRoute.route;
+		);		
+	)
+	post len remainingRoute.route <= len remainingRoute~.route and
+		elems remainingRoute.route subset elems route.route;
 	
+	
+	--Returns the total traveled distance
 	public getDistance: () ==> nat
 	getDistance() == 
 	(
-		return 1;
-	);
+		return traveledDistance;
+	)
+	pre traveledDistance >= 0
+	post traveledDistance >= 0;
 	
 functions
 -- TODO Define functiones here

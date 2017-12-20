@@ -10,7 +10,6 @@ operations
 	--WorkoutNew's constructor
 	public WorkoutNew: Types`Timestamp * Types`Route ==> WorkoutNew
 	WorkoutNew(t, r) == (
-		traveledDistance := 0;
 		threshold := 10;
 		route:= r;
 		atomic (
@@ -25,27 +24,50 @@ operations
 	public isFinished: () ==> bool
 	isFinished() == 
 	(
-		return true;
+		return len route.route > 1;
 	);
 	
 	--Returns last point
 	public getLastPoint: () ==> [Types`Point]
-	getLastPoint() == return mk_Types`Point(0,0);
+	getLastPoint() ==
+	(
+		if len route.route = 0 then
+			return nil
+		else
+			return route.route(len route.route)
+	);
 	
 	--Receives a new GPS Position
 	public newGPSPosition: Types`Point ==> ()
 	newGPSPosition(point) == 
 	(
-		
-		return;
-	);
+		if outsideOfThreshold(point) then
+			route.route := route.route ^ [point]
+		elseif len route.route = 0 then
+			(route.route := route.route ^ [point]; 
+			return;);	
+	)
+	post len route.route >= len route~.route;
 	
 	--Retrieves the total traveled distance
 	public getDistance: () ==> nat
 	getDistance() == 
 	(
-		return 1;
-	);
+		dcl tmp : [Types`Point] := nil;
+		dcl distance: real := 0;
+		if len route.route <= 1 then
+			return distance;
+		
+		tmp := hd route.route;
+		
+		for point in tl route.route do
+			(distance := distance + Math`distance(tmp, point);
+			tmp := point;
+			);
+			
+		return distance;
+	)
+	post route.route = route~.route;
 	
 functions
 -- TODO Define functiones here

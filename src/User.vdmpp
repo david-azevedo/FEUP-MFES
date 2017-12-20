@@ -155,6 +155,13 @@ operations
 	post currentWorkout <> nil;
 	
 	
+	--Finishes the current workout
+	public finishCurrentWorkout: nat ==> ()
+	finishCurrentWorkout(time) ==
+		currentWorkout.finish(Math`secondsToTime(time))
+	pre currentWorkout <> nil
+	post currentWorkout <> nil;
+	
 functions
 -- TODO Define functiones here
 traces

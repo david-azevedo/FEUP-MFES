@@ -5,7 +5,6 @@ values
 
 instance variables
 	protected route: Types`Route;
-	protected traveledDistance: nat;
 	protected startTime: Types`Timestamp;
 	protected endTime: Types`Timestamp;
 	protected threshold: nat;
@@ -36,6 +35,27 @@ operations
 	(
 		return route;
 	);
+	
+	--Sets the time to finish the circuit
+	public finish: Types`Timestamp ==> ()
+	finish (time) ==
+	(
+		endTime := time
+	)
+	post endTime = time;
+	
+	
+	--Calculates the average velocity 
+	public calculateVelocity: () ==> real
+	calculateVelocity() == return getDistance() / Math`timeToSeconds(calculateTime())
+	post endTime = endTime~ and startTime = startTime~;
+	
+	public calculateTime: () ==> Types`Timestamp
+	calculateTime() ==
+	(
+		return Math`secondsToTime(abs (Math`timeToSeconds(endTime) - Math`timeToSeconds(startTime)));
+	)
+	post endTime = endTime~ and startTime = startTime~;
 	
 	--Checks if outside of threshold
 	protected outsideOfThreshold: Types`Point ==> bool

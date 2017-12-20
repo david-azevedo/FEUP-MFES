@@ -1,0 +1,105 @@
+class WorkoutTests is subclass of Test
+types
+values
+instance variables
+
+operations
+	
+	public test: () ==> ()
+	test () ==
+	(
+		dcl wnew : [Workout] := nil;
+		dcl route1: [Types`Route] := mk_Types`Route("Route1", []);
+		
+		--Initializes a new Workout Cannot be finished
+		wnew := new WorkoutNew(Math`secondsToTime(10), route1);
+		assertTrue( wnew.isFinished() = false);
+		
+		--Checks current Time and distance Must be 0
+		assertTrue( Math`timeToSeconds(wnew.calculateTime()) = 0);
+		assertTrue( wnew.getDistance() = 0);
+		
+		--Add Movement
+		wnew.newGPSPosition(mk_Types`Point(10,10));
+		
+		assertTrue(len wnew.getRoute().route = 1);
+		
+		--Cannot Finish
+		assertTrue( wnew.isFinished() = false);
+		
+		--Souldn't add another Point
+		wnew.newGPSPosition(mk_Types`Point(10,10));
+		
+		assertTrue(len wnew.getRoute().route = 1);
+		
+		--Sould add another Point
+		wnew.newGPSPosition(mk_Types`Point(10,50));
+		
+		assertTrue(len wnew.getRoute().route = 2);
+		
+		--Now can be finished
+		assertTrue( wnew.isFinished() = true);
+		
+		
+		--Finishes the workout
+		wnew.finish(Math`secondsToTime(30));
+		--Checks total time
+		assertTrue(wnew.calculateVelocity() = 2);
+		
+		assertTrue( wnew.isFinished() = true);
+		
+		route1 := wnew.getRoute();
+		
+		
+		--Existing track
+		wnew := new WorkoutExisting(Math`secondsToTime(10), route1);
+		assertTrue( wnew.isFinished() = false);
+		
+		--Checks current Time and distance Must be 0
+		assertTrue( Math`timeToSeconds(wnew.calculateTime()) = 0);
+		assertTrue( wnew.getDistance() = 0);
+		
+		--Add Movement
+		wnew.newGPSPosition(mk_Types`Point(10,15));
+		--Route must always have total Points
+		assertTrue(len wnew.getRoute().route = 2);
+		
+		--Cannot Finish
+		assertTrue( wnew.isFinished() = false);
+		
+		--Souldn't Finish
+		wnew.newGPSPosition(mk_Types`Point(10,15));
+		
+		assertTrue( wnew.isFinished() = false);
+		
+		assertTrue(len wnew.getRoute().route = 2);
+		
+		--Sould Finish
+		wnew.newGPSPosition(mk_Types`Point(10,55));
+		
+		assertTrue(len wnew.getRoute().route = 2);
+		
+		--Now can be finished
+		assertTrue( wnew.isFinished() = true);
+		
+		
+		--Souldn't Change the state
+		wnew.newGPSPosition(mk_Types`Point(10,55));
+		
+		--Now can still be finished
+		assertTrue( wnew.isFinished() = true);
+		
+		--Finishes the workout
+		wnew.finish(Math`secondsToTime(30));
+		--Checks total time
+		assertTrue(wnew.calculateVelocity() = 2);
+		
+	);
+	
+	
+	
+functions
+-- TODO Define functiones here
+traces
+-- TODO Define Combinatorial Test Traces here
+end WorkoutTests

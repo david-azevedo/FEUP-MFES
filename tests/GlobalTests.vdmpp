@@ -15,19 +15,19 @@ operations
 		global.clear();
 		
 		--Test if can add and list users
-		global.addUser("João Ferreira");
+		global.addUser("Joï¿½o Ferreira");
 		global.addUser("David Azevedo");
 		
 		users := global.listUsers();
 		assertTrue(len users = 2);
-		assertTrue("João Ferreira" in set elems users);
+		assertTrue("Joï¿½o Ferreira" in set elems users);
 		assertTrue("David Azevedo" in set elems users);
 		
 		--Test if can remove users
-		global.removeUser("João Ferreira");
+		global.removeUser("Joï¿½o Ferreira");
 		users := global.listUsers();
 		assertTrue(len users = 1);
-		assertTrue(not "João Ferreira" in set elems users);
+		assertTrue(not "Joï¿½o Ferreira" in set elems users);
 		assertTrue("David Azevedo" in set elems users);
 		
 		--Test the retreival of a user
