@@ -10,7 +10,13 @@ instance variables
 	private currentWorkout: [Workout];
 	private global : [Global];
 	private statistics: Statistics;
-
+	private completedChallenges: Types`ChallengeSet;
+	-- Challenges which the user is owner of
+	private owner: Types`ChallengeSet;
+	-- Challenges which the user is participating
+	private participation: Types`ChallengeSet;
+	private rank: Types`Rank;
+	inv completedChallenges subset (owner union participation);
 	
 operations
 
@@ -24,10 +30,29 @@ operations
 		routes := {|->};
 		name := n;
 		statistics := new Statistics();
+		completedChallenges := {};
+		owner := {};
+		participation := {};
+		rank := <Lazy>;
 		return self
 	)
 	post name = n;
 	
+	public resetStatistics: () ==> ()
+	resetStatistics() == (
+		statistics.reset();
+	);
+	
+	public createDistanceChallenge: Types`String * nat ==> ()
+	createDistanceChallenge(n, d) == (
+		owner := owner union {new DistanceChallenge(n, self, d)};
+	);
+	
+	-- TODO
+	public createRouteChallenge: Types`String * Types`Route ==> ()
+	createRouteChallenge(n, r) == (
+		owner := owner union {new RouteChallenge(n, self, r)};
+	);
 	
 	--Add a friend to the user by string
 	public addFriend: Types`String ==> ()
@@ -127,8 +152,7 @@ operations
 		currentWorkout.newGPSPosition(point)
 	)
 	pre currentWorkout <> nil
-	post currentWorkout <> nil
-	
+	post currentWorkout <> nil;
 	
 	
 functions
