@@ -9,9 +9,22 @@ operations
 	public test: () ==> ()
 	test () ==
 	(
+		
+		statistics.addDistance(100);
+		assertTrue(statistics.getTotalDistance() = 100);
+		statistics.addTime(Math`secondsToTime(100));
+		assertTrue(statistics.getTotalRunTime() = mk_Types`Timestamp(0,1,40));
+		assertTrue(statistics.getVelocity() = 1);
+		
+		statistics.reset();
 		assertTrue(statistics.getTotalDistance() = 0);
 		assertTrue(statistics.getVelocity() = 0);
 		assertTrue(statistics.getTotalRunTime() = mk_Types`Timestamp(0,0,0));
+		
+		statistics.addTime(Math`secondsToTime(2500));
+		statistics.addDistance(6250);
+		assertTrue(statistics.getVelocity() = 2.5);
+		
 	);
 	
 functions
