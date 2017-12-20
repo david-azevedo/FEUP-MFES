@@ -1,0 +1,42 @@
+class MathTests is subclass of Test
+types
+
+values
+
+instance variables
+
+operations
+
+	--Tests class Math
+	public test: () ==> ()
+	test () ==
+	(
+	
+		--Test Sqrt
+		assertTrue(Math`sqrt(4) = 2);
+		assertTrue(Math`sqrt(81) = 9);
+		
+		--Test Distance
+		assertTrue(Math`distance(mk_Types`Point(0,0),mk_Types`Point(1,0)) = 1);
+		assertTrue(Math`distance(mk_Types`Point(0,0),mk_Types`Point(-1,0)) = 1);
+		assertTrue(Math`distance(mk_Types`Point(0,0),mk_Types`Point(0,0)) = 0);
+		assertTrue(Math`distance(mk_Types`Point(0,0),mk_Types`Point(0,1)) = 1);
+		assertTrue(Math`distance(mk_Types`Point(0,0),mk_Types`Point(0,-1)) = 1);
+		assertTrue(Math`distance(mk_Types`Point(0,-1),mk_Types`Point(0,-1)) = 0);
+		assertTrue(abs(Math`distance(mk_Types`Point(0,0),mk_Types`Point(6,6)) - 8.485281) < 0.00001);
+		
+		--Test TimeToSeconds and SecondsToTime
+		
+		assertTrue( 1234 = Math`timeToSeconds(Math`secondsToTime(1234)));
+		assertTrue( 0 = Math`timeToSeconds(Math`secondsToTime(0)));
+		assertTrue( 8807 = Math`timeToSeconds(Math`secondsToTime(8807)));
+		
+	);
+	
+
+
+functions
+
+traces
+
+end MathTests

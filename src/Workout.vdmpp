@@ -1,12 +1,38 @@
 class Workout
 types
--- TODO Define types here
+
 values
--- TODO Define values here
+
 instance variables
--- TODO Define instance variables here
+	protected route: Types`Route;
+	protected traveledDistance: nat;
+	protected startTime: Types`Timestamp;
+	protected endTime: Types`Timestamp;
+	
+	inv Math`timeToSeconds(startTime) <= Math`timeToSeconds(endTime);
+	
 operations
--- TODO Define operations here
+	
+	--Check if a workout is finished
+	public isFinished: () ==> bool
+	isFinished() == is subclass responsibility;
+	
+	--Receives a new GPS Position
+	public newGPSPosition: Types`Point ==> ()
+	newGPSPosition(point) == is subclass responsibility;
+	
+	--Returns a distance
+	public getDistance: () ==> nat
+	getDistance() == is subclass responsibility;
+	
+	--Returns the route of an task
+	public getRoute: () ==> Types`Route
+	getRoute() == 
+	(
+		return route;
+	);
+	
+	
 functions
 -- TODO Define functiones here
 traces

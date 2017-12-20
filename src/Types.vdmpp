@@ -12,7 +12,7 @@ types
 									lon: real;
 									
 	public Route :: name: String
-									route: seq1 of Point;
+									route: seq of Point;
 	
 	public TopWorkout = inmap Route to Workout;
 	

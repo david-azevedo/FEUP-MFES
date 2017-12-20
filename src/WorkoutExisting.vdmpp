@@ -1,12 +1,48 @@
-class WorkoutExisting
+class WorkoutExisting is subclass of Workout
 types
 -- TODO Define types here
 values
 -- TODO Define values here
 instance variables
--- TODO Define instance variables here
+	private remainingRoute: Types`Route;
+	private lastPoint: [Types`Point];
+	
 operations
--- TODO Define operations here
+
+	--WorkoutExisting's constructor
+	public WorkoutExisting: Types`Timestamp * Types`Route ==> WorkoutExisting
+	WorkoutExisting(t, r) == (
+		traveledDistance := 0;
+		route:= r;
+		remainingRoute := r;
+		lastPoint:= nil;
+		atomic (
+		startTime:= t;
+		endTime := t
+		);
+		return self
+	)
+	post startTime = endTime and startTime = t;
+	
+	
+	public isFinished: () ==> bool
+	isFinished() == 
+	(
+		return true;
+	);
+	
+	public newGPSPosition: Types`Point ==> ()
+	newGPSPosition(point) == 
+	(
+		return;
+	);
+	
+	public getDistance: () ==> nat
+	getDistance() == 
+	(
+		return 1;
+	);
+	
 functions
 -- TODO Define functiones here
 traces

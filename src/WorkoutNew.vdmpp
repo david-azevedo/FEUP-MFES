@@ -1,4 +1,4 @@
-class WorkoutNew
+class WorkoutNew is subclass of Workout
 types
 -- TODO Define types here
 values
@@ -6,7 +6,42 @@ values
 instance variables
 -- TODO Define instance variables here
 operations
--- TODO Define operations here
+
+	--WorkoutNew's constructor
+	public WorkoutNew: Types`Timestamp * Types`Route ==> WorkoutNew
+	WorkoutNew(t, r) == (
+		traveledDistance := 0;
+		route:= r;
+		atomic (
+		startTime:= t;
+		endTime := t
+		);
+		return self
+	)
+	post startTime = endTime and startTime = t;
+	
+	--Checks if a new Workout is finished which is always true
+	public isFinished: () ==> bool
+	isFinished() == 
+	(
+		return true;
+	);
+	
+	--Receives a new GPS Position
+	public newGPSPosition: Types`Point ==> ()
+	newGPSPosition(point) == 
+	(
+		
+		return;
+	);
+	
+	--Retrieves the total traveled distance
+	public getDistance: () ==> nat
+	getDistance() == 
+	(
+		return 1;
+	);
+	
 functions
 -- TODO Define functiones here
 traces

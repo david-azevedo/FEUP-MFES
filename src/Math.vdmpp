@@ -2,17 +2,39 @@ class Math
 types
 -- TODO Define types here
 values
--- TODO Define values here
+	public static EPS = 0.000000000000001;
 instance variables
 -- TODO Define instance variables here
 operations
+
+		--Returns a squareroot of a number
+		public static sqrt: real ==> real
+		sqrt (v) == 
+		(
+			dcl eps : real := 1.0E-15;
+			dcl res : real := v;
+					while abs(res - v/res) > eps * res do
+				res := (v/res  + res) / 2.0;
+			
+			return res;
+		)
+		pre v > 0;
+		
+		-- Calculates the distance from two points
+		public static distance: Types`Point * Types`Point ==> real
+		distance(p1, p2) == 
+		(
+		if p1.lat = p2.lat and p1.lon = p2.lon then
+			return 0.0;
+		return sqrt((p1.lat - p2.lat)*(p1.lat - p2.lat) + (p1.lon-p2.lon)*(p1.lon-p2.lon))
+		);
 functions
 		-- Return the total seconds of a timestamp
-		public static timeToSeconds: Types`Timestamp -> nat
+		public static timeToSeconds: Types`Timestamp +> nat
 		timeToSeconds(time) == (time.hour * 60 * 60) + (time.minutes * 60) + time.seconds;
 		
 		-- Convert seconds into a Timestamp
-		public static secondsToTime: nat -> Types`Timestamp
+		public static secondsToTime: nat +> Types`Timestamp
 		secondsToTime(seconds) == mk_Types`Timestamp((seconds div 60 div 60) mod 24,(seconds div 60) mod 60,seconds mod 60);
 		
 traces

@@ -6,17 +6,22 @@ instance variables
 
 	public name: Types`String;
 	private friends: Types`UserSet;
+	private routes: Types`RouteToWorkouts;
+	private currentWorkout: [Workout];
 	private global : [Global];
 	private statistics: Statistics;
 
+	
 operations
 
 
 	--User's constructor
 	public User: Types`String * Global ==> User
 	User(n, g) == (
+		currentWorkout := nil;
 		global:= g;
 		friends := {};
+		routes := {|->};
 		name := n;
 		statistics := new Statistics();
 		return self
@@ -61,6 +66,7 @@ operations
 	)
 	post friends subset friends~ and card friends = card friends~ - 1;
 	 
+	 
 	--Removes a friend
 	public removeFriend: [User] ==> ()
 	removeFriend(friend) ==
@@ -69,6 +75,8 @@ operations
 	)
 	pre friend <> nil
 	post card friends = card friends~ - 1 and friends subset friends~;	
+	
+	
 	--Lists all the friends.
 	public listFriends: () ==> Types`StringSeq
 	listFriends() == (
@@ -77,6 +85,51 @@ operations
 			result := result ^ [friend.name];
 		return result;
 	);
+	
+	--Starts a workout given a name and the current time in seconds
+	public startWorkout: Types`String * nat ==> ()
+	startWorkout( routeName, startTime ) ==
+	(
+		dcl time : Types`Timestamp := Math`secondsToTime(startTime);
+		dcl route : [Types`Route] := nil;
+		
+		for all r in set dom routes do
+			if r.name = routeName then
+				route := r;
+		
+		if route <> nil then
+			currentWorkout := new WorkoutExisting(time, route)
+		else
+			(
+			route := mk_Types`Route(routeName, []);
+			currentWorkout := new WorkoutNew(time, route);
+			);
+	)
+	post	(isofbaseclass(WorkoutExisting, currentWorkout) 
+			 	or
+				isofbaseclass(WorkoutNew, currentWorkout))
+				and currentWorkout <> nil;
+
+
+	--Cancels the current workout
+	public cancelCurrentWorkout: () ==> ()
+	cancelCurrentWorkout() == 
+	(
+		currentWorkout := nil;
+	)
+	post currentWorkout = nil;
+	
+	
+	--Updates GPS coords to update workout state
+	public updateByGPS: Types`Point ==> ()
+	updateByGPS(point) ==
+	(
+		currentWorkout.newGPSPosition(point)
+	)
+	pre currentWorkout <> nil
+	post currentWorkout <> nil
+	
+	
 	
 functions
 -- TODO Define functiones here
