@@ -13,6 +13,7 @@ operations
 	public WorkoutExisting: Types`Timestamp * Types`Route ==> WorkoutExisting
 	WorkoutExisting(t, r) == (
 		traveledDistance := 0;
+		threshold:= 5;
 		route:= r;
 		remainingRoute := r;
 		lastPoint:= nil;
@@ -30,6 +31,17 @@ operations
 	(
 		return true;
 	);
+	
+	--Returns last point
+	public getLastPoint: () ==> [Types`Point]
+	getLastPoint() ==
+	(
+		if len route.route = 0 then
+			return nil
+		else
+			return route.route(len route.route)
+	);
+	
 	
 	public newGPSPosition: Types`Point ==> ()
 	newGPSPosition(point) == 

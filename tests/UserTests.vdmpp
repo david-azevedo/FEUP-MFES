@@ -12,6 +12,12 @@ operations
 	public test: () ==> ()
 	test () ==
 	(
+		testFriendship();
+	);
+	
+	public testFriendship: () ==> ()
+	testFriendship () ==
+	(
 		dcl user: [User] := nil;
 		dcl stringList: Types`StringSeq := [];
 		--Fill Global With Users()
