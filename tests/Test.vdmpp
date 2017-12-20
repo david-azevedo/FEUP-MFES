@@ -14,7 +14,11 @@ operations
 	public static main: () ==> ()
 	main () ==
 	(
+		--Global Tests
 		new GlobalTests().test();
+		
+		--User Tests
+		new UserTests().test();
 	);
 	
 	

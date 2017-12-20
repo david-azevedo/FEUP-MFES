@@ -8,6 +8,7 @@ instance variables
 	private global : [Global];
 operations
 
+
 	--User's constructor
 	public User: Types`String * Global ==> User
 	User(n, g) == (
@@ -18,9 +19,60 @@ operations
 	)
 	post name = n;
 	
-	--Add a friend to the user
-
 	
+	--Add a friend to the user by string
+	public addFriend: Types`String ==> ()
+	addFriend(n) ==
+	(
+		dcl friend : [User] := global.getUser(n);
+		if friend <> nil then
+			(
+			addFriend(friend);
+			friend.addFriend(self);
+			);
+	)
+	post card friends - card friends~ <= 1 and not self in set friends;
+	
+	
+	--Add a new friend
+	public addFriend: [User] ==> ()
+	addFriend(friend) ==
+	(
+		friends := friends union {friend};
+	)
+	pre friend <> nil and self <> friend
+	post card friends = card friends~ + 1 and not self in set friends;
+	
+	
+	--Removes a friend from the user by string
+	public removeFriend: Types`String ==> ()
+	removeFriend(n) ==
+	(		
+		for all f in set friends do
+			if f.name = n then
+			(
+				removeFriend(f);
+				f.removeFriend(self);	
+			);
+	)
+	post friends subset friends~ and card friends = card friends~ - 1;
+	 
+	--Removes a friend
+	public removeFriend: [User] ==> ()
+	removeFriend(friend) ==
+	(
+		friends := friends \ {friend};
+	)
+	pre friend <> nil
+	post card friends = card friends~ - 1 and friends subset friends~;	
+	--Lists all the friends.
+	public listFriends: () ==> Types`StringList
+	listFriends() == (
+		dcl result: Types`StringList := [];
+		for all friend in set friends do 
+			result := result ^ [friend.name];
+		return result;
+	);
 	
 functions
 -- TODO Define functiones here

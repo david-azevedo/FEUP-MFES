@@ -1,0 +1,44 @@
+class UserTests is subclass of Test
+types
+
+values
+
+instance variables
+	private global: Global := new Global();
+	
+operations
+	
+	--Tests the functionality of the class User
+	public test: () ==> ()
+	test () ==
+	(
+		dcl user: [User] := nil;
+		dcl stringList: Types`StringList := [];
+		--Fill Global With Users()
+		global.clear();
+		
+		global.addUser("João Ferreira");
+		global.addUser("David Azevedo");
+		
+		--Retrive User:
+		user := global.getUser("João Ferreira");
+		
+		--Add Friend
+		user.addFriend("David Azevedo");
+		
+		stringList:= user.listFriends();
+		assertTrue(len stringList = 1);
+		assertTrue("David Azevedo" in set elems stringList);
+		
+		--Remove Friend
+		
+		user.removeFriend("David Azevedo");
+		
+		stringList:= user.listFriends();
+		assertTrue(len stringList = 0);
+		
+	);
+
+functions
+traces
+end UserTests
