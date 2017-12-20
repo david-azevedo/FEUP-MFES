@@ -8,7 +8,7 @@ operations
 	public test: () ==> ()
 	test () ==
 	(
-		dcl users : Types`StringList := [];
+		dcl users : Types`StringSet := [];
 		dcl user : [User] := nil;
 		dcl elements : nat := 0;
 		

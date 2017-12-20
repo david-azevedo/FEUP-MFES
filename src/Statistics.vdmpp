@@ -3,10 +3,45 @@ types
 -- TODO Define types here
 values
 -- TODO Define values here
-instance variables
--- TODO Define instance variables here
+	instance variables
+		
+		private totalDistance: nat := 0;
+		private totalRunTime: Types`Timestamp := mk_Types`Timestamp(0,0,0);
+		private velocity: real := 0;
+		inv Math`timeToSeconds(totalRunTime) = 0 => velocity = 0 or velocity = totalDistance / Math`timeToSeconds(totalRunTime)
+		
 operations
--- TODO Define operations here
+
+	public reset: () ==> ()
+	reset() == atomic (
+		totalDistance := 0; -- in meters
+		totalRunTime := mk_Types`Timestamp(0,0,0);
+		velocity := 0; -- in meters per second
+	);
+	
+	public getTotalDistance: () ==> nat
+  getTotalDistance() == return totalDistance;
+  
+	public getTotalRunTime: () ==> Types`Timestamp
+  getTotalRunTime() == return totalRunTime;	
+	
+	public getVelocity: () ==> nat
+  getVelocity() == return velocity;
+  
+  public addTime: Types`Timestamp ==> ()
+  addTime(time) == (
+  	totalRunTime := Math`secondsToTime(Math`timeToSeconds(time) + Math`timeToSeconds(totalRunTime));
+  	if (Math`timeToSeconds(totalRunTime) <> 0)
+  		then velocity := totalDistance / Math`timeToSeconds(totalRunTime)
+  );
+  
+  public addDistance: nat ==> ()
+  addDistance(dist) == (
+  	totalDistance := dist + totalDistance;
+  	if (Math`timeToSeconds(totalRunTime) <> 0)
+  		then velocity := totalDistance / Math`timeToSeconds(totalRunTime)
+  );
+
 functions
 -- TODO Define functiones here
 traces

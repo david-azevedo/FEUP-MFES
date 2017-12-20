@@ -2,9 +2,11 @@ class Types
 types
 	public String = seq of char;
 	
+	-- A timestamp representes an hour of the day. Ie 12h:34m:21s
 	public Timestamp :: hour: nat
-											minute: nat
-											seconds: nat;
+											minutes: nat
+											seconds: nat
+		inv t == t.hour <= 23 and t.minutes <= 59 and t.seconds <= 59;
 											
 	public Point :: lat: real
 									lon: real;
@@ -14,13 +16,13 @@ types
 	
 	public TopWorkout = inmap Route to Workout;
 	
-	public Challenges = set of Challenge;
+	public ChallengeSet = set of Challenge;
 	
 	public RouteToWorkouts = map Route to seq of Workout;
 	
-	public Users = set of User;
+	public UserSet = set of User;
 	
-	public StringList = seq of String;
+	public StringSet = seq of String;
 	
 	public Rank = <Lazy> | <Normal> | <Active> | <SuperFit> | <ForrestGump>;
 						

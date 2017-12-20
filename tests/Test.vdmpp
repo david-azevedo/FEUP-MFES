@@ -15,6 +15,7 @@ operations
 	main () ==
 	(
 		new GlobalTests().test();
+		new StatisticsTests().test();
 	);
 	
 	

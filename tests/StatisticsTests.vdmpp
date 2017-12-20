@@ -1,0 +1,19 @@
+class StatisticsTests is subclass of Test
+instance variables
+
+	private statistics: Statistics := new Statistics();
+
+operations
+	
+	-- Tests the functionaly of the class Global
+	public test: () ==> ()
+	test () ==
+	(
+		assertTrue(statistics.getTotalDistance() = 0);
+		assertTrue(statistics.getVelocity() = 0);
+		assertTrue(statistics.getTotalRunTime() = mk_Types`Timestamp(0,0,0));
+	);
+	
+functions
+traces
+end StatisticsTests

@@ -3,9 +3,12 @@ types
 values
 	
 instance variables
+
 	public name: Types`String;
-	private friends: Types`Users;
+	private friends: Types`UserSet;
 	private global : [Global];
+	private statistics: Statistics;
+
 operations
 
 	--User's constructor
@@ -14,6 +17,7 @@ operations
 		global:= g;
 		friends := {};
 		name := n;
+		statistics := new Statistics();
 		return self
 	)
 	post name = n;
