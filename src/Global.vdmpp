@@ -5,7 +5,7 @@ values
 	
 instance variables
 	
-	private users: Types`Users;
+	private users: Types`UserSet;
 	
 operations
 	
@@ -29,9 +29,9 @@ operations
 	post forall u in set users & u.name <> name;
 	
 	--Lists all the users known.
-	public listUsers: () ==> Types`StringList
+	public listUsers: () ==> Types`StringSeq
 	listUsers() == (
-		dcl result: Types`StringList := [];
+		dcl result: Types`StringSeq := [];
 		for all user in set users do 
 			result := result ^ [user.name];
 		return result;
@@ -45,7 +45,7 @@ operations
 				return user;
 		return nil;
 	)
-	post card users = card users~;
+	post card users = card users~; -- and user = iota x in set users & x.name = name;
 	
 	public clear: () ==> ()
 	clear() == 

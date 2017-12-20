@@ -13,7 +13,7 @@ operations
 	test () ==
 	(
 		dcl user: [User] := nil;
-		dcl stringList: Types`StringList := [];
+		dcl stringList: Types`StringSeq := [];
 		--Fill Global With Users()
 		global.clear();
 		

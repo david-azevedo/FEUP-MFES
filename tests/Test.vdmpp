@@ -19,6 +19,10 @@ operations
 		
 		--User Tests
 		new UserTests().test();
+	
+		--Statistics Tests
+		new StatisticsTests().test();
+
 	);
 	
 	

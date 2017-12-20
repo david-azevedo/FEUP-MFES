@@ -6,9 +6,15 @@ values
 instance variables
 -- TODO Define instance variables here
 operations
--- TODO Define operations here
 functions
--- TODO Define functiones here
+		-- Return the total seconds of a timestamp
+		public static timeToSeconds: Types`Timestamp -> nat
+		timeToSeconds(time) == (time.hour * 60 * 60) + (time.minutes * 60) + time.seconds;
+		
+		-- Convert seconds into a Timestamp
+		public static secondsToTime: nat -> Types`Timestamp
+		secondsToTime(seconds) == mk_Types`Timestamp((seconds div 60 div 60) mod 24,(seconds div 60) mod 60,seconds mod 60);
+		
 traces
 -- TODO Define Combinatorial Test Traces here
 end Math

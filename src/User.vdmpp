@@ -3,9 +3,12 @@ types
 values
 	
 instance variables
+
 	public name: Types`String;
-	private friends: Types`Users;
+	private friends: Types`UserSet;
 	private global : [Global];
+	private statistics: Statistics;
+
 operations
 
 
@@ -15,6 +18,7 @@ operations
 		global:= g;
 		friends := {};
 		name := n;
+		statistics := new Statistics();
 		return self
 	)
 	post name = n;
@@ -66,9 +70,9 @@ operations
 	pre friend <> nil
 	post card friends = card friends~ - 1 and friends subset friends~;	
 	--Lists all the friends.
-	public listFriends: () ==> Types`StringList
+	public listFriends: () ==> Types`StringSeq
 	listFriends() == (
-		dcl result: Types`StringList := [];
+		dcl result: Types`StringSeq := [];
 		for all friend in set friends do 
 			result := result ^ [friend.name];
 		return result;
