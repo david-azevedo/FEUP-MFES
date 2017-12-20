@@ -1,12 +1,27 @@
-class DistanceChallenge
-types
--- TODO Define types here
-values
--- TODO Define values here
+class DistanceChallenge is subclass of Challenge
 instance variables
--- TODO Define instance variables here
+
+	public distance: nat;
+
 operations
--- TODO Define operations here
+
+	public DistanceChallenge: Types`String * User * nat ==> DistanceChallenge
+	DistanceChallenge(n, u, d) == (
+		name := n;
+		owner := u;
+		participants := { owner };
+		distance := d;
+		return self;
+	);
+
+-- Given a completed workout see if the challenge was completed
+	public completed: Workout ==> bool
+	completed(workout) == (
+		if(workout.getDistance() = distance)
+			then return true;
+		return false;
+	);
+
 functions
 -- TODO Define functiones here
 traces

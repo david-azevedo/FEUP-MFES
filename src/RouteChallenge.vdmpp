@@ -1,14 +1,25 @@
-class RouteChallenge
-types
--- TODO Define types here
-values
--- TODO Define values here
+class RouteChallenge is subclass of Challenge
 instance variables
--- TODO Define instance variables here
+	public route: Types`Route;
 operations
--- TODO Define operations here
+
+	public RouteChallenge: Types`String * User * Types`Route ==> RouteChallenge
+	RouteChallenge(n, u, r) == (
+		name := n;
+		owner := u;
+		participants := { owner };
+		route := r;
+		return self;
+	);
+	
+	-- Given a completed workout see if the challenge was completed
+	public completed: Workout ==> bool
+	completed(workout) == (
+		if(workout.getRoute() = route)
+			then return true;
+		return false;
+	);
+
 functions
--- TODO Define functiones here
 traces
--- TODO Define Combinatorial Test Traces here
 end RouteChallenge

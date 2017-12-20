@@ -1,12 +1,52 @@
 class Challenge
-types
--- TODO Define types here
-values
--- TODO Define values here
 instance variables
--- TODO Define instance variables here
+	
+	protected name: Types`String;
+	protected owner: [User];
+	protected participants: Types`UserSet;
+	inv owner in set participants;
+	
 operations
--- TODO Define operations here
+
+	-- Challenge constructor
+	public Challenge: Types`String * User ==> Challenge
+	Challenge(n, u) == (
+		name := n;
+		owner := u;
+		participants := { owner };
+		return self;
+	);
+	
+	
+	-- Add a participant to a challenge
+	public addParticipant: User * User ==> ()
+	addParticipant(o, participant) == (
+		participants := participants union {participant};
+	)
+	pre owner = o
+	post owner = owner~ and participants = participants~ union {participant};
+
+
+	-- Remove participant from challenge
+	public removeParticipant: User * User ==> ()
+	removeParticipant(o, p) == (
+		participants := participants \ {p};
+	)
+	pre owner = o and o <> p and card participants > 0
+	post owner = owner~ and participants = participants~ \ {p};
+	
+	-- Remove self from challenge
+	public removeSelf: User ==> ()
+	removeSelf(u) == (
+		participants := participants \ {u};
+	)
+	pre owner <> u and card participants > 0
+	post owner = owner~ and participants = participants~ \ {u};
+
+	-- Given a completed workout see if the challenge was completed
+	public completed: Workout ==> bool
+	completed(Workout) == is subclass responsibility;
+
 functions
 -- TODO Define functiones here
 traces
