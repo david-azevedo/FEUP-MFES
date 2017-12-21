@@ -28,6 +28,9 @@ operations
 		
 		--Workout Tests
 		new WorkoutTests().test();
+		
+		--Challenge Tests
+		new ChallengeTests().test();
 
 	);
 	

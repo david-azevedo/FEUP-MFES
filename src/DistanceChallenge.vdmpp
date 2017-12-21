@@ -6,18 +6,22 @@ instance variables
 operations
 
 	public DistanceChallenge: Types`String * User * nat ==> DistanceChallenge
-	DistanceChallenge(n, u, d) == (
+	DistanceChallenge(n, u, d) == 
+	(	
+	atomic (
 		name := n;
 		owner := u;
-		participants := { owner };
+		participants := { u };
 		distance := d;
-		return self;
+		);
+		
+	return self;
 	);
 
 -- Given a completed workout see if the challenge was completed
 	public completed: Workout ==> bool
 	completed(workout) == (
-		if(workout.getDistance() = distance)
+		if(workout.getDistance() >= distance)
 			then return true;
 		return false;
 	);

@@ -4,20 +4,27 @@ instance variables
 operations
 
 	public RouteChallenge: Types`String * User * Types`Route ==> RouteChallenge
-	RouteChallenge(n, u, r) == (
+	RouteChallenge(n, u, r) == 
+	(
+	atomic (
 		name := n;
 		owner := u;
-		participants := { owner };
+		participants := { u };
 		route := r;
-		return self;
+		);
+		
+	return self;
 	);
 	
 	-- Given a completed workout see if the challenge was completed
 	public completed: Workout ==> bool
 	completed(workout) == (
-		if(workout.getRoute() = route)
+	
+		-- All elements of the sequence route must be equal
+		if((elems route.route) = (elems workout.getRoute().route))
 			then return true;
 		return false;
+	
 	);
 
 functions

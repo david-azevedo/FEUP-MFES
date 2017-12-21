@@ -1,22 +1,22 @@
 class Challenge
 instance variables
 	
-	protected name: Types`String;
-	protected owner: [User];
+	public name: Types`String;
+	protected owner: [User] := nil;
 	protected participants: Types`UserSet;
-	inv owner in set participants;
+	inv owner <> nil => owner in set participants;
 	
 operations
-
-	-- Challenge constructor
-	public Challenge: Types`String * User ==> Challenge
-	Challenge(n, u) == (
-		name := n;
-		owner := u;
-		participants := { owner };
-		return self;
+	
+	public getOwner: () ==> [User]
+	getOwner() == (
+		return owner;
 	);
 	
+	public getParticipants: () ==> Types`UserSet
+	getParticipants() == (
+		return participants;
+	);
 	
 	-- Add a participant to a challenge
 	public addParticipant: User * User ==> ()
@@ -32,7 +32,7 @@ operations
 	removeParticipant(o, p) == (
 		participants := participants \ {p};
 	)
-	pre owner = o and o <> p and card participants > 0
+	pre owner = o and o <> p and card participants > 1
 	post owner = owner~ and participants = participants~ \ {p};
 	
 	-- Remove self from challenge
@@ -40,7 +40,7 @@ operations
 	removeSelf(u) == (
 		participants := participants \ {u};
 	)
-	pre owner <> u and card participants > 0
+	pre owner <> u and card participants > 1
 	post owner = owner~ and participants = participants~ \ {u};
 
 	-- Given a completed workout see if the challenge was completed
