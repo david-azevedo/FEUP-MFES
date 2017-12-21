@@ -21,7 +21,7 @@ operations
 	completed(workout) == (
 	
 		-- All elements of the sequence route must be equal
-		if((elems route.route) = (elems workout.getRoute().route))
+		if((elems route.route) subset (elems workout.getRoute().route))
 			then return true;
 		return false;
 	

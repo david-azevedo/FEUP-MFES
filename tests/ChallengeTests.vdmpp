@@ -87,6 +87,13 @@ operations
 		-- Challenge should now be completed
 		assertTrue(routeChallenge.completed(workout) = true);
 		
+		-- Adding one more GPS point to the route
+		workout.newGPSPosition(mk_Types`Point(25,75));
+		
+		-- Challenge should still be completed even though the workout was longer
+		assertTrue(routeChallenge.completed(workout) = true);
+		
+		
 	);
 
 functions
