@@ -1,6 +1,16 @@
 class User
 types
 values
+	-- Each challenge counts as 1000 seconds to the ranking
+	public CHALLENGEVALUE: nat = 1000;
+	-- Each meter in distance counts as 100 seconds to the ranking
+	public DISTANCEMULTIPLIER: nat = 100;
+	
+	-- Definition of limits for each rank
+	public NORMAL: nat = 2000;
+	public ACTIVE: nat = 5000;
+	public SUPERFIT: nat = 10000;
+	public FORRESTGUMP: nat = 20000;
 	
 instance variables
 
@@ -21,7 +31,6 @@ instance variables
 	
 operations
 
-
 	--User's constructor
 	public User: Types`String * Global ==> User
 	User(n, g) == (
@@ -40,21 +49,155 @@ operations
 	)
 	post name = n;
 	
+	
+	-- User starts a workout based on a challenge which he was challenged to
+	public startChallenge: Types`String * [Types`String] ==> ()
+	startChallenge(cName, routeName) ==
+	(
+		dcl myChallenge: Challenge := iota challenge in set owner union participation & challenge.name = cName;
+		dcl time: Types`Timestamp := mk_Types`Timestamp(0,0,0);
+		dcl route: [Types`Route] := nil;
+		
+		if (isofclass(DistanceChallenge, myChallenge)) then
+		(
+			route := mk_Types`Route(routeName, []);
+			currentWorkout := new WorkoutNew(time, route);
+		) else if (isofclass(RouteChallenge, myChallenge)) then
+		(
+			currentWorkout := new WorkoutExisting(time, narrow_(myChallenge,RouteChallenge).route);
+		);
+	)
+	pre currentWorkout = nil and exists challenge in set owner union participation & challenge.name = cName
+	post currentWorkout <> nil;
+	
+	
+	-- Private operation to update the user rank after each workout
+	private updateRank: () ==> ()
+	updateRank() == 
+	(
+		-- Each completed challenge is 
+		dcl value: nat := Math`timeToSeconds(statistics.getTotalRunTime()) + (statistics.getTotalDistance() * DISTANCEMULTIPLIER) + (card completedChallenges * CHALLENGEVALUE);
+		
+		if (value >= FORRESTGUMP)
+		then rank := <ForrestGump>
+		else
+		
+		if (value >= SUPERFIT)
+		then rank := <SuperFit>
+		else
+		
+		if (value >= ACTIVE)
+		then rank := <Active>
+		else
+		
+		if (value >= NORMAL)
+		then rank := <Normal>
+
+	);
+	
+	-- Given a completed workout see if it finishes any open challenge
+	private finishChallenges: Workout ==> ()
+	finishChallenges(workout) ==
+	(
+		-- Go through all the challenges the user owns
+		for all challenge in set owner union participation do
+			if (challenge.completed(workout)) then
+			(
+				completedChallenges := completedChallenges union { challenge }
+			);
+	);
+	
+	-- Get user rank
+	public getRank: () ==> Types`Rank
+	getRank() ==
+	(
+		return rank;
+	);
+	
+	-- Reset user statistics
 	public resetStatistics: () ==> ()
 	resetStatistics() == (
 		statistics.reset();
 	);
 	
+	
+	-- Add a challenge to the users participation when he gets invited
+	public addChallenge: Challenge ==> ()
+	addChallenge(chal) ==
+	(
+		participation := participation union { chal };
+	)
+	post card participation + 1 = card participation~;
+	
+	
+	-- Add a challenge to the users participation when he gets invited
+	public removeChallenge: Challenge ==> ()
+	removeChallenge(chal) ==
+	(
+		participation := participation \ { chal };
+	)
+	-- User must have a participating challenge in order to remove it
+	pre card participation > 0 
+	post card participation - 1 = card participation~;
+
+	
+	-- Add a friend to a challenge
+	public addFriendToChallenge: Types`String * Types`String ==> ()
+	addFriendToChallenge(friendName, challengeName) ==
+	(
+		for all c in set owner do
+			if c.name = challengeName then
+			(
+				c.addParticipant(self, global.getUser(friendName));
+				global.getUser(friendName).addChallenge(c);
+			);
+	)
+	-- Only the onwer can add someone to a challenge
+	pre exists friend in set friends & friend.name = friendName and
+			exists challenge in set owner & challenge.name = challengeName
+	post friends = friends~ and owner = owner~;
+
+	
+	-- Remove a friend from a challenge
+	public removeFriendFromChallenge: Types`String * Types`String ==> ()
+	removeFriendFromChallenge(friendName, challengeName) ==
+	(
+		for all c in set owner do
+			if c.name = challengeName then
+			(
+				c.removeParticipant(self, global.getUser(friendName));
+				global.getUser(friendName).removeChallenge(c);
+			);
+	)
+	-- Only the onwer can remove someone from a challenge
+	pre exists friend in set friends & friend.name = friendName and
+			exists challenge in set owner & challenge.name = challengeName
+	post friends = friends~ and owner = owner~;
+	
+
+	-- Create a new distance challenge
 	public createDistanceChallenge: Types`String * nat ==> ()
 	createDistanceChallenge(n, d) == (
 		owner := owner union {new DistanceChallenge(n, self, d)};
-	);
+	)
+	pre not exists challenge in set owner & challenge.name = n
+	post card owner + 1 = card owner~ and
+			 exists challenge in set owner & is_DistanceChallenge(challenge) and
+			 challenge.name = n and
+			 narrow_(challenge, DistanceChallenge).distance = d;
+
+
+	-- Creating a route challenge
+	public createRouteChallenge: Types`String * Types`String ==> ()
+	createRouteChallenge(n, routeName) == (
+		owner := owner union {new RouteChallenge(n, self, iota route in set dom routes & route.name = routeName)};
+	)
+	pre not exists challenge in set owner & challenge.name = n
+	post card owner + 1 = card owner~ and
+			 exists challenge in set owner & is_RouteChallenge(challenge) and
+			 challenge.name = n and
+			 narrow_(challenge, RouteChallenge).route = iota route in set dom routes & route.name = routeName;
 	
-	-- TODO
-	public createRouteChallenge: Types`String * Types`Route ==> ()
-	createRouteChallenge(n, r) == (
-		owner := owner union {new RouteChallenge(n, self, r)};
-	);
 	
 	--Add a friend to the user by string
 	public addFriend: Types`String ==> ()
@@ -113,6 +256,7 @@ operations
 		return result;
 	);
 	
+	
 	--Starts a workout given a name and the current time in seconds
 	public startWorkout: Types`String * nat ==> ()
 	startWorkout( routeName, startTime ) ==
@@ -145,6 +289,7 @@ operations
 	(
 		currentWorkout := nil;
 	)
+	pre currentWorkout <> nil
 	post currentWorkout = nil;
 	
 	
@@ -225,6 +370,7 @@ operations
 	)
 	post card dom RESULT = card dom top;
 	
+	
 	--List Routes
 	public listRoutes: () ==> Types`StringSeq
 	listRoutes() ==
@@ -239,18 +385,59 @@ operations
 	post routes = routes~;
 	
 	
+	--List Challenges
+	public listChallenges: () ==> Types`StringSeq
+	listChallenges() ==
+	(
+		dcl res: Types`StringSeq := [];
+		
+		for all e in set (owner union participation) do
+			res:= res ^ [e.name];
+		
+		return res;
+	)
+	post owner = owner~ and participation = participation~;
+	
+	
+	--List Completed Challenges
+	public listCompletedChallenges: () ==> Types`StringSeq
+	listCompletedChallenges() ==
+	(
+		dcl res: Types`StringSeq := [];
+		
+		for all e in set completedChallenges do
+			res:= res ^ [e.name];
+		
+		return res;
+	)
+	post completedChallenges = completedChallenges~;
+	
+	
 	--Finishes the current workout
 	public finishCurrentWorkout: nat ==> ()
 	finishCurrentWorkout(time) ==
 	(
 		currentWorkout.finish(Math`secondsToTime(time));
 		if currentWorkout.isFinished() then
+		(
+			updateStatistics(currentWorkout);
+			finishChallenges(currentWorkout);
 			storeCurrentWorkout();
-		
+		);
 		currentWorkout := nil;
 	)
 	pre currentWorkout <> nil
 	post currentWorkout = nil;
+	
+	
+	-- Update the user statistics when a workout is completed
+	private updateStatistics: Workout ==> ()
+	updateStatistics(workout) ==
+	(
+		statistics.addTime(workout.calculateTime());
+		statistics.addDistance(workout.getDistance());
+	)
+	post statistics = statistics~;
 	
 functions
 -- TODO Define functiones here

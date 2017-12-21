@@ -2,11 +2,11 @@ class Types
 types
 	public String = seq of char;
 	
-	-- A timestamp representes an hour of the day. Ie 12h:34m:21s
+	-- A timestamp representes a duration. Ie 123h:34m:21s
 	public Timestamp :: hour: nat
 											minutes: nat
 											seconds: nat
-		inv t == t.hour <= 23 and t.minutes <= 59 and t.seconds <= 59;
+		inv t == t.minutes <= 59 and t.seconds <= 59;
 											
 	public Point :: lat: real
 									lon: real;	

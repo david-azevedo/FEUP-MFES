@@ -1,9 +1,9 @@
 class Challenge
 instance variables
 	
-	public name: Types`String;
+	public name: Types`String := "";
 	protected owner: [User] := nil;
-	protected participants: Types`UserSet;
+	protected participants: Types`UserSet := {};
 	inv owner <> nil => owner in set participants;
 	
 operations
