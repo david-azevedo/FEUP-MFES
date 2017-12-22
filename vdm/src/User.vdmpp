@@ -441,6 +441,15 @@ operations
 	pre currentWorkout <> nil
 	post currentWorkout = nil;
 	
+	--Returns the current route
+	public getCurrentRoute: () ==> [Types`Route]
+	getCurrentRoute() ==
+	(
+		if (currentWorkout <> nil) then
+			return currentWorkout.getRoute();
+		
+		return nil;
+	);
 	
 	-- Update the user statistics when a workout is completed
 	private updateStatistics: Workout ==> ()

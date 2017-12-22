@@ -232,6 +232,9 @@ operations
 		--Repeat route
 		user.startWorkout("Route1", 20);
 		
+		--Route must be Route1
+		assertTrue(user.getCurrentRoute().name = "Route1");
+		
 		--Create Route
 		user.updateByGPS(mk_Types`Point(0,0));
 		
@@ -264,8 +267,12 @@ operations
 		
 		--Repeat route
 		user.startWorkout("Route1", 20);
-		--Finish with better time
+		--Finish with better time Cant register route
 		user.finishCurrentWorkout(21);
+		
+		--Route must be nil
+		assertTrue(user.getCurrentRoute() = nil);
+		
 		
 		--Routes and tops still be the same
 		assertTrue( elems user.listRoutes() = {"Route1"});
