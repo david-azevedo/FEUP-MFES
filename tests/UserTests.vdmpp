@@ -257,10 +257,21 @@ operations
 		--Cancel
 		user.cancelCurrentWorkout();
 		
-		--Routes and tops still must be empty
+		--Routes and tops still be the same
 		assertTrue( elems user.listRoutes() = {"Route1"});
 		assertTrue( rng user.getTop() = {10});
 		assertTrue( rng user.getRoutesPerformed() = {2});
+		
+		--Repeat route
+		user.startWorkout("Route1", 20);
+		--Finish with better time
+		user.finishCurrentWorkout(21);
+		
+		--Routes and tops still be the same
+		assertTrue( elems user.listRoutes() = {"Route1"});
+		assertTrue( rng user.getTop() = {10});
+		assertTrue( rng user.getRoutesPerformed() = {2});
+		
 		
 		global.clear();
 	);
