@@ -18,7 +18,7 @@ public class WorkoutActions extends Actions{
 	public void SetupCommands() {
 		Console.Println("Workout Commands added!");
 
-		Register("user.workout.finish", "<name> Finishes a current workout",
+		Register("user.workout.finish", "Finishes the current workout",
 			(String[] args) -> 
 			{
 				user.finishCurrentWorkout(System.currentTimeMillis()/1000);
@@ -27,7 +27,7 @@ public class WorkoutActions extends Actions{
 				return true;
 			});
 		
-		Register("user.workout.cancel", "<name> Cancels a current workout",
+		Register("user.workout.cancel", "Cancels the current workout",
 			(String[] args) -> 
 			{
 				user.cancelCurrentWorkout();
