@@ -110,7 +110,10 @@ public class User {
   private void finishChallenges(final Workout workout) {
 
     for (Iterator iterator_21 =
-            SetUtil.union(Utils.copy(owner), Utils.copy(participation)).iterator();
+            SetUtil.diff(
+                    SetUtil.union(Utils.copy(owner), Utils.copy(participation)),
+                    Utils.copy(completedChallenges))
+                .iterator();
         iterator_21.hasNext();
         ) {
       Challenge challenge = (Challenge) iterator_21.next();

@@ -3,10 +3,15 @@ package interaction;
 import java.awt.List;
 import java.sql.Time;
 import java.util.ArrayList;
+import java.util.Map;
+import java.util.Set;
 
+import org.omg.CORBA.PUBLIC_MEMBER;
+import org.overture.codegen.runtime.VDMMap;
 import org.overture.codegen.runtime.VDMSeq;
 
 import controller.Console;
+import generated.Types.Route;
 import generated.User;
 
 public class UserActions extends Actions{
@@ -81,7 +86,44 @@ public class UserActions extends Actions{
 					return true;
 				});
 
+		Register("user.routes", "Lists the routes performed",
+			(String[] args) -> 
+			{
 				
+				VDMMap map = user.getRoutesPerformed();
+				Console.Println("Routes performed: " + map.size());
+				
+				for(Object entry : map.keySet()) {
+					Route r = (Route)entry;
+					Console.Println("\t" + r.name + " : " + map.get(entry).toString());
+				}
+				return true;
+			});
+
+		Register("user.top", "Lists the top",
+			(String[] args) -> 
+			{
+				VDMMap map = user.getTop();
+				Console.Println("Routes Top: " + map.size());
+				
+				for(Object entry : map.keySet()) {
+					Route r = (Route)entry;
+					Console.Println("\t" + r.name + " : " + map.get(entry).toString() + "s");
+				}
+				return true;
+			});
+		
+		
+		Register("user.routes.names", "Lists the Routes Names",
+			(String[] args) -> 
+			{
+				Console.Println("Routes: "); 
+
+				for(Object entry : user.listRoutes()){
+					Console.Println("\t" + entry.toString()); 
+				}
+				return true;
+			});
 		
 	}
 	
