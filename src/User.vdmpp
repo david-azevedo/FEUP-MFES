@@ -110,19 +110,21 @@ operations
 	finishChallenges(workout) ==
 	(
 		-- Go through all the challenges the user owns
-		for all challenge in set owner union participation do
+		for all challenge in set (owner union participation) \ completedChallenges do
 			if (challenge.completed(workout)) then
 			(
 				completedChallenges := completedChallenges union { challenge }
 			);
-	);
+	)
+	post owner = owner~ and participation = participation~;
 	
 	-- Get user rank
 	public getRank: () ==> Types`Rank
 	getRank() ==
 	(
 		return rank;
-	);
+	)
+	post rank = rank~;
 	
 	-- Reset user statistics
 	public resetStatistics: () ==> ()
