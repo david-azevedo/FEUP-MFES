@@ -51,8 +51,8 @@ operations
 	
 	
 	-- User starts a workout based on a challenge which he was challenged to
-	public startChallenge: Types`String * [Types`String] ==> ()
-	startChallenge(cName, routeName) ==
+	public startChallenge: Types`String ==> ()
+	startChallenge(cName) ==
 	(
 		dcl myChallenge: Challenge := iota challenge in set owner union participation & challenge.name = cName;
 		dcl time: Types`Timestamp := mk_Types`Timestamp(0,0,0);
@@ -60,7 +60,7 @@ operations
 		
 		if (isofclass(DistanceChallenge, myChallenge)) then
 		(
-			route := mk_Types`Route(routeName, []);
+			route := mk_Types`Route(cName, []);
 			currentWorkout := new WorkoutNew(time, route);
 		) else if (isofclass(RouteChallenge, myChallenge)) then
 		(
@@ -95,6 +95,16 @@ operations
 
 	);
 	
+	
+	-- Get user statistics
+	public getStatistics: () ==> Statistics
+	getStatistics() ==
+	(
+		return statistics;
+	)
+	post statistics = statistics~;
+	
+	
 	-- Given a completed workout see if it finishes any open challenge
 	private finishChallenges: Workout ==> ()
 	finishChallenges(workout) ==
@@ -127,7 +137,7 @@ operations
 	(
 		participation := participation union { chal };
 	)
-	post card participation + 1 = card participation~;
+	post card participation = card participation~ + 1;
 	
 	
 	-- Add a challenge to the users participation when he gets invited
@@ -138,7 +148,7 @@ operations
 	)
 	-- User must have a participating challenge in order to remove it
 	pre card participation > 0 
-	post card participation - 1 = card participation~;
+	post card participation = card participation~ - 1;
 
 	
 	-- Add a friend to a challenge
@@ -181,7 +191,7 @@ operations
 		owner := owner union {new DistanceChallenge(n, self, d)};
 	)
 	pre not exists challenge in set owner & challenge.name = n
-	post card owner + 1 = card owner~ and
+	post card owner = card owner~ + 1 and
 			 exists challenge in set owner & is_DistanceChallenge(challenge) and
 			 challenge.name = n and
 			 narrow_(challenge, DistanceChallenge).distance = d;
@@ -193,7 +203,7 @@ operations
 		owner := owner union {new RouteChallenge(n, self, iota route in set dom routes & route.name = routeName)};
 	)
 	pre not exists challenge in set owner & challenge.name = n
-	post card owner + 1 = card owner~ and
+	post card owner = card owner~ + 1 and
 			 exists challenge in set owner & is_RouteChallenge(challenge) and
 			 challenge.name = n and
 			 narrow_(challenge, RouteChallenge).route = iota route in set dom routes & route.name = routeName;
@@ -436,6 +446,7 @@ operations
 	(
 		statistics.addTime(workout.calculateTime());
 		statistics.addDistance(workout.getDistance());
+		updateRank();
 	)
 	post statistics = statistics~;
 	

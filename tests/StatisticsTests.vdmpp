@@ -21,7 +21,7 @@ operations
 		assertTrue(statistics.getVelocity() = 0);
 		assertTrue(statistics.getTotalRunTime() = mk_Types`Timestamp(0,0,0));
 		
-		statistics.addTime(Math`secondsToTime(2500));
+		statistics.addTime(mk_Types`Timestamp(0,41,40));
 		statistics.addDistance(6250);
 		assertTrue(statistics.getVelocity() = 2.5);
 		

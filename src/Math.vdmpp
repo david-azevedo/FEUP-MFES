@@ -28,6 +28,8 @@ operations
 			return 0.0;
 		return sqrt((p1.lat - p2.lat)*(p1.lat - p2.lat) + (p1.lon-p2.lon)*(p1.lon-p2.lon))
 		);
+		
+		
 functions
 		-- Return the total seconds of a timestamp
 		public static timeToSeconds: Types`Timestamp +> nat

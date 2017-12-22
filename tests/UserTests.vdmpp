@@ -14,6 +14,8 @@ operations
 	(
 		testFriendship();
 		testWorkouts();
+		testChallenges();
+		
 	);
 	
 	public testFriendship: () ==> ()
@@ -46,10 +48,128 @@ operations
 		
 	);
 	
+	
+	public testChallenges: () ==> ()
+	testChallenges() ==
+	(
+		dcl user : [User] := nil;
+		dcl friend1 : [User] := nil;
+		dcl friend2 : [User] := nil;
+		
+		--Clear users
+		global.clear();
+		
+		--Setup User
+		global.addUser("Vasco");
+		global.addUser("Valentin");
+		global.addUser("Rodrigo");
+		
+		user:= global.getUser("Vasco");
+		friend1:= global.getUser("Valentin");
+		friend2:= global.getUser("Rodrigo");
+		
+		--Start new route
+		user.startWorkout("Route3", 0);
+		
+		--Create Route
+		user.updateByGPS(mk_Types`Point(0,0));
+		user.updateByGPS(mk_Types`Point(0,50));
+		
+		-- Ending workout
+		user.finishCurrentWorkout(100);
+		
+		-- Verifying rank update
+		assertTrue(user.getRank() = <Active>);
+		
+		--Start new route
+		friend1.startWorkout("Route4", 0);
+		
+		--Create Route
+		friend1.updateByGPS(mk_Types`Point(0,0));
+		friend1.updateByGPS(mk_Types`Point(0,100));
+		
+		-- Ending workout
+		friend1.finishCurrentWorkout(100);
+		
+		-- Verifying rank update
+		assertTrue(friend1.getRank() = <SuperFit>);
+		
+		--Start new route
+		friend2.startWorkout("Route5", 0);
+		
+		--Create Route
+		friend2.updateByGPS(mk_Types`Point(0,0));
+		friend2.updateByGPS(mk_Types`Point(0,200));
+		
+		-- Ending workout
+		friend2.finishCurrentWorkout(100);
+		
+		-- Verifying rank update
+		assertTrue(friend2.getRank() = <ForrestGump>);
+		
+		-- Adding some friends to the user
+		user.addFriend("Valentin");
+		user.addFriend("Rodrigo");
+		
+		-- Creating a new distance challenge
+		user.createDistanceChallenge("IronMan",500);
+		user.createDistanceChallenge("MyChallenge",50);
+		
+		-- Creating a route challenge
+		user.createRouteChallenge("BostonMarathon", "Route3");
+		
+		-- Adding the friends
+		user.addFriendToChallenge("Valentin", "BostonMarathon");
+		user.addFriendToChallenge("Rodrigo", "IronMan");
+		
+		-- Checking if everybody has the correct challenges
+		assertTrue(user.listChallenges() = ["IronMan", "MyChallenge", "BostonMarathon"]);
+		assertTrue(friend1.listChallenges() = ["BostonMarathon"]);
+		assertTrue(friend2.listChallenges() = ["IronMan"]);
+		
+		-- Removing friends from the challenges
+		user.removeFriendFromChallenge("Valentin", "BostonMarathon");
+		user.removeFriendFromChallenge("Rodrigo", "IronMan");
+	
+		-- Checking if everybody has the correct challenges
+		assertTrue(user.listChallenges() = ["IronMan", "MyChallenge", "BostonMarathon"]);
+		assertTrue(friend1.listChallenges() = []);
+		assertTrue(friend2.listChallenges() = []);
+		
+		-- Starting a challenge
+		user.startChallenge("MyChallenge");
+		
+		-- Running the 50meters distance to complete the challenge
+		user.updateByGPS(mk_Types`Point(0,0));
+		user.updateByGPS(mk_Types`Point(0,75));
+		
+		-- Finish the workout
+		user.finishCurrentWorkout(50);
+		
+		-- Verifying that the challenge was completed
+		assertTrue(user.listCompletedChallenges() = ["MyChallenge"]);
+		
+		-- Starting a route challenge for route3 create above
+		user.startChallenge("BostonMarathon");
+		
+		-- Points of route3
+		user.updateByGPS(mk_Types`Point(0,0));
+		user.updateByGPS(mk_Types`Point(0,50));
+		
+		-- Finishing the workout
+		user.finishCurrentWorkout(45);
+		
+		-- Verifying that the challenge was completed
+		assertTrue(user.listCompletedChallenges() = ["MyChallenge", "BostonMarathon"]);
+		assertTrue(user.getRank() = <SuperFit>);
+	);
+	
+	
 	public testWorkouts: () ==> ()
 	testWorkouts() ==
 	(
 		dcl user : [User] := nil;
+		dcl stats: [Statistics] := nil;
 		
 		--Clear users
 		global.clear();
@@ -78,8 +198,31 @@ operations
 		
 		user.updateByGPS(mk_Types`Point(0,40));
 		
+		-- User should be ranked as lazy
+		assertTrue(user.getRank() = <Lazy>);
+		
 		--Finish
 		user.finishCurrentWorkout(40);
+		
+		-- User should now be ranked as NORMAL
+		assertTrue(user.getRank() = <Normal>);
+		
+		-- Getting the updated user statistics
+		stats := user.getStatistics();
+		
+		-- Checking if statistics where updated correctly
+		assertTrue(stats.getTotalDistance() = 40);
+		assertTrue(stats.getTotalRunTime() = mk_Types`Timestamp(0,0,20));
+		
+		-- Now let's reset the statistics
+		user.resetStatistics();
+		
+		-- Getting the updated user statistics
+		stats := user.getStatistics();
+		
+		-- Should be all 0's now
+		assertTrue(stats.getTotalDistance() = 0);
+		assertTrue(stats.getTotalRunTime() = mk_Types`Timestamp(0,0,0));
 		
 		--Routes and tops still must be empty
 		assertTrue( elems user.listRoutes() = {"Route1"});
@@ -118,14 +261,6 @@ operations
 		assertTrue( elems user.listRoutes() = {"Route1"});
 		assertTrue( rng user.getTop() = {10});
 		assertTrue( rng user.getRoutesPerformed() = {2});
-		
-		
-		
-		
-		
-		
-		
-		
 		
 		global.clear();
 	);

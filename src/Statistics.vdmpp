@@ -7,6 +7,7 @@ values
 		
 		private totalDistance: nat := 0;
 		private totalRunTime: Types`Timestamp := mk_Types`Timestamp(0,0,0);
+		inv totalDistance >= 0;
 		
 operations
 
