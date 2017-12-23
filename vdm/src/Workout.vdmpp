@@ -1,14 +1,25 @@
 class Workout
-types
-
-values
-
+/**
+Class that represent a workout (run).
+Workouts have a route and can be of 2 types.
+A WorkoutExisting is a workout where the users
+follows an already known route.
+A WorkoutNew is when a user runs a new route. 
+**/
 instance variables
+
+	-- The workout's route
 	protected route: Types`Route;
+	-- The starting timestamp
 	protected startTime: Types`Timestamp;
+	-- The ending timestamp
 	protected endTime: Types`Timestamp;
+	-- The threshold is a natural number representing
+	-- the minimum distance from a previous point needed
+	-- in order to be considered a new point to the route
 	protected threshold: nat;
 	
+	-- The starting time cannot be after the ending time
 	inv Math`timeToSeconds(startTime) <= Math`timeToSeconds(endTime);
 	
 operations
@@ -44,12 +55,12 @@ operations
 	)
 	post endTime = time;
 	
-	
-	--Calculates the average velocity 
+	-- Calculates the average velocity 
 	public calculateVelocity: () ==> real
 	calculateVelocity() == return getDistance() / Math`timeToSeconds(calculateTime())
 	post endTime = endTime~ and startTime = startTime~;
 	
+	-- Calculates the duration of the workout
 	public calculateTime: () ==> Types`Timestamp
 	calculateTime() ==
 	(
@@ -57,7 +68,7 @@ operations
 	)
 	post endTime = endTime~ and startTime = startTime~;
 	
-	--Checks if outside of threshold
+	--Checks if a given point is outside of the threshold
 	protected outsideOfThreshold: Types`Point ==> bool
 	outsideOfThreshold (point) ==
 	(
@@ -66,7 +77,7 @@ operations
 		return Math`distance(point, getLastPoint()) > threshold;
 	);
 	
-	--Checks if inside of threshold
+	--Checks if a given point is inside of the threshold
 	protected insideOfThreshold: Types`Point ==> bool
 	insideOfThreshold (point) ==
 	(
@@ -75,8 +86,4 @@ operations
 		return Math`distance(point, getLastPoint()) <= threshold;
 	);
 	
-functions
--- TODO Define functiones here
-traces
--- TODO Define Combinatorial Test Traces here
 end Workout

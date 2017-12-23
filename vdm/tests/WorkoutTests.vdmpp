@@ -1,8 +1,8 @@
 class WorkoutTests is subclass of Test
-types
-values
-instance variables
-
+/**
+Class to test all workout related operations
+incluind both workout subclasses
+**/
 operations
 	
 	public test: () ==> ()
@@ -21,15 +21,15 @@ operations
 		
 		--Add Movement
 		wnew.newGPSPosition(mk_Types`Point(10,10));
-		
 		assertTrue(len wnew.getRoute().route = 1);
 		
 		--Cannot Finish
 		assertTrue( wnew.isFinished() = false);
 		
-		--Souldn't add another Point
+		-- Souldn't add another Point because it is still under the
+		-- last points threshold
 		wnew.newGPSPosition(mk_Types`Point(10,10));
-		
+
 		assertTrue(len wnew.getRoute().route = 1);
 		
 		--Sould add another Point
@@ -40,16 +40,14 @@ operations
 		--Now can be finished
 		assertTrue( wnew.isFinished() = true);
 		
-		
 		--Finishes the workout
 		wnew.finish(Math`secondsToTime(30));
+		
 		--Checks total time
 		assertTrue(wnew.calculateVelocity() = 2);
-		
 		assertTrue( wnew.isFinished() = true);
 		
 		route1 := wnew.getRoute();
-		
 		
 		--Existing track
 		wnew := new WorkoutExisting(Math`secondsToTime(10), route1);
@@ -67,14 +65,14 @@ operations
 		--Cannot Finish
 		assertTrue( wnew.isFinished() = false);
 		
-		--Souldn't Finish
+		--Shouldn't Finish
 		wnew.newGPSPosition(mk_Types`Point(10,15));
 		
 		assertTrue( wnew.isFinished() = false);
 		
 		assertTrue(len wnew.getRoute().route = 2);
 		
-		--Sould Finish
+		--Should Finish
 		wnew.newGPSPosition(mk_Types`Point(10,55));
 		
 		assertTrue(len wnew.getRoute().route = 2);
@@ -82,8 +80,7 @@ operations
 		--Now can be finished
 		assertTrue( wnew.isFinished() = true);
 		
-		
-		--Souldn't Change the state
+		--Shouldn't Change the state
 		wnew.newGPSPosition(mk_Types`Point(10,55));
 		
 		--Now can still be finished
@@ -91,15 +88,10 @@ operations
 		
 		--Finishes the workout
 		wnew.finish(Math`secondsToTime(30));
+		
 		--Checks total time
 		assertTrue(wnew.calculateVelocity() = 2);
 		
 	);
 	
-	
-	
-functions
--- TODO Define functiones here
-traces
--- TODO Define Combinatorial Test Traces here
 end WorkoutTests

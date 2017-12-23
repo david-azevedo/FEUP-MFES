@@ -1,13 +1,15 @@
 class WorkoutExisting is subclass of Workout
-types
--- TODO Define types here
-values
--- TODO Define values here
+/**
+The subclass for a workout which repets a previously seen route
+**/
 instance variables
-	private remainingRoute: Types`Route;
-	private lastPoint: [Types`Point];
-	private traveledDistance: real;
 	
+	-- The points the user still has to go through
+	private remainingRoute: Types`Route;
+	-- The last point passed by the user
+	private lastPoint: [Types`Point];
+	-- The total traveled distance during the workout
+	private traveledDistance: real;
 	
 operations
 
@@ -36,7 +38,7 @@ operations
 	pre len remainingRoute.route >= 0
 	post len remainingRoute.route >= 0;
 	
-	--Returns last point
+	--Returns the last point
 	public getLastPoint: () ==> [Types`Point]
 	getLastPoint() ==
 	(
@@ -58,7 +60,6 @@ operations
 	)
 	post lastPoint <> nil;
 	
-	
 	--Updates the state of the workout given a GPS update
 	public newGPSPosition: Types`Point ==> ()
 	newGPSPosition(point) == 
@@ -69,9 +70,9 @@ operations
 			remainingRoute.route := tl remainingRoute.route;
 		);		
 	)
+	-- The remaining points must remain a subset of the total route's elements
 	post len remainingRoute.route <= len remainingRoute~.route and
 		elems remainingRoute.route subset elems route.route;
-	
 	
 	--Returns the total traveled distance
 	public getDistance: () ==> nat
@@ -82,8 +83,4 @@ operations
 	pre traveledDistance >= 0
 	post traveledDistance >= 0;
 	
-functions
--- TODO Define functiones here
-traces
--- TODO Define Combinatorial Test Traces here
 end WorkoutExisting

@@ -1,10 +1,8 @@
 class WorkoutNew is subclass of Workout
-types
--- TODO Define types here
-values
--- TODO Define values here
-instance variables
--- TODO Define instance variables here
+/**
+Subclass WorkoutNew where the user runs a never before
+seen route
+**/
 operations
 
 	--WorkoutNew's constructor
@@ -27,7 +25,7 @@ operations
 		return len route.route > 1;
 	);
 	
-	--Returns last point
+	--Returns the last point
 	public getLastPoint: () ==> [Types`Point]
 	getLastPoint() ==
 	(
@@ -69,8 +67,4 @@ operations
 	)
 	post route.route = route~.route;
 	
-functions
--- TODO Define functiones here
-traces
--- TODO Define Combinatorial Test Traces here
 end WorkoutNew
