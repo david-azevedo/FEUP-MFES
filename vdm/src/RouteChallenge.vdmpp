@@ -1,32 +1,43 @@
 class RouteChallenge is subclass of Challenge
+/**
+As the name indicates, a route challenge is one
+where the user must run through all of the points
+that constitute the route during one workout.
+**/
 instance variables
+	
+	-- The objetive route of the challenge
 	public route: Types`Route;
+
 operations
 
+	-- Constructor for the subclass DistanceChallenge
 	public RouteChallenge: Types`String * User * Types`Route ==> RouteChallenge
 	RouteChallenge(n, u, r) == 
 	(
+	-- These operations must be atomic in order to obey to the invariant
+	-- defined in the Distance class
 	atomic (
 		name := n;
 		owner := u;
 		participants := { u };
 		route := r;
 		);
-		
 	return self;
 	);
 	
 	-- Given a completed workout see if the challenge was completed
 	public completed: Workout ==> bool
 	completed(workout) == (
-	
-		-- All elements of the sequence route must be equal
+		/*	
+		All elements of the objetive route must be present in the route
+		performed during the workout. Here we don't consider the order of
+		the point, simply put, if the user passed through all of the points
+		in any order, then the criteria is met and the challenge is completed
+		*/
 		if((elems route.route) subset (elems workout.getRoute().route))
 			then return true;
 		return false;
-	
 	);
 
-functions
-traces
 end RouteChallenge

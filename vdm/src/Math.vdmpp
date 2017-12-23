@@ -1,10 +1,8 @@
 class Math
-types
--- TODO Define types here
-values
-	public static EPS = 0.000000000000001;
-instance variables
--- TODO Define instance variables here
+/**
+This is an auxiliary class to perform mathematical calculations
+in other classes.
+**/
 operations
 
 		--Returns a squareroot of a number
@@ -29,8 +27,8 @@ operations
 		return sqrt((p1.lat - p2.lat)*(p1.lat - p2.lat) + (p1.lon-p2.lon)*(p1.lon-p2.lon))
 		);
 		
-		
 functions
+		
 		-- Return the total seconds of a timestamp
 		public static timeToSeconds: Types`Timestamp +> nat
 		timeToSeconds(time) == (time.hour * 60 * 60) + (time.minutes * 60) + time.seconds;
@@ -39,6 +37,4 @@ functions
 		public static secondsToTime: nat +> Types`Timestamp
 		secondsToTime(seconds) == mk_Types`Timestamp((seconds div 60 div 60) mod 24,(seconds div 60) mod 60,seconds mod 60);
 		
-traces
--- TODO Define Combinatorial Test Traces here
 end Math

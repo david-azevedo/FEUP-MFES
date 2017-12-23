@@ -1,40 +1,50 @@
 class Types
+/**
+This class defines all the types used throughout all classes.
+We opted for this approach so that we could have all types centrelized
+and be less error prune when developping and debuggin the project
+**/
 types
+	-- A standard string which is a sequence of char's
 	public String = seq of char;
 	
 	-- A timestamp representes a duration. Ie 123h:34m:21s
 	public Timestamp :: hour: nat
 											minutes: nat
 											seconds: nat
+		-- We cannot have 60 minutes nor seconds in durations
 		inv t == t.minutes <= 59 and t.seconds <= 59;
-											
+										
+	-- Represent a GPS point in a 2D format with latitude and longitude
 	public Point :: lat: real
 									lon: real;	
+	
+	-- A route which is defined by it's name and sequence of points
 	public Route :: name: String
 									route: seq of Point;
 	
+	-- This is an injective map of routes to workouts representing
+	-- the best workout for each route. Different key values correspond
+	-- to different values.
 	public TopWorkout = inmap Route to Workout;
 	
+	-- A set of Challenges
 	public ChallengeSet = set of Challenge;
 	
+	-- A map which connects a Route to the sequence of workouts
+	-- the user has done in this route
 	public RouteToWorkouts = map Route to seq of Workout;
 	
+	-- A map of routes to natural numbers
 	public RouteToNat = map Route to nat;
 	
+	-- A set of Users
 	public UserSet = set of User;
 	
+	-- A sequence of strings for listing purposes
 	public StringSeq = seq of String;
 	
+	-- An enumerator for the User Rank
 	public Rank = <Lazy> | <Normal> | <Active> | <SuperFit> | <ForrestGump>;
 						
-values
--- TODO Define values here
-instance variables
--- TODO Define instance variables here
-operations
--- TODO Define operations here
-functions
--- TODO Define functiones here
-traces
--- TODO Define Combinatorial Test Traces here
 end Types

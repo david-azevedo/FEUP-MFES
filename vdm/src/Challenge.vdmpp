@@ -1,54 +1,70 @@
 class Challenge
+/**
+A challenge can either be a distance challenge or a route challenge.
+The users can create them and invite/dare their friends to complete
+each challenge. Completed challenges count for the total rank of the
+user in the app. The challenge has a name an owner and a list of
+participants. The owner is also considered a participant as state
+by the invariant.
+**/
 instance variables
-	
+
+	-- Name of the challenge	
 	public name: Types`String := "";
+	-- Owner who created the challenge
 	protected owner: [User] := nil;
+	-- Participants who we're added to the challenge by the owner
 	protected participants: Types`UserSet := {};
+	-- The owner is also a participant in the challenge
 	inv owner <> nil => owner in set participants;
 	
 operations
 	
+	-- Returns the User who started the challenge
 	public getOwner: () ==> [User]
 	getOwner() == (
 		return owner;
 	);
 	
+	-- Returns the set of Users who are participating in the challenge
 	public getParticipants: () ==> Types`UserSet
 	getParticipants() == (
 		return participants;
 	);
 	
-	-- Add a participant to a challenge
+	-- Add a participant to a challenge, which only the owner can do
 	public addParticipant: User * User ==> ()
 	addParticipant(o, participant) == (
 		participants := participants union {participant};
 	)
+	-- Must be the owner
 	pre owner = o
+	-- The owner must remain the same and the new participant should be added
 	post owner = owner~ and participants = participants~ union {participant};
 
-
-	-- Remove participant from challenge
+	-- Remove participant from challenge, which only the owner can do
 	public removeParticipant: User * User ==> ()
 	removeParticipant(o, p) == (
 		participants := participants \ {p};
 	)
+	-- There must at least one more participant other than the owner so that he can be removed
 	pre owner = o and o <> p and card participants > 1
+	-- At the end the owner remains the same and the participant was indeed removed
 	post owner = owner~ and participants = participants~ \ {p};
 	
-	-- Remove self from challenge
+	-- Remove self from challenge, which the owner cannot do.
 	public removeSelf: User ==> ()
 	removeSelf(u) == (
 		participants := participants \ {u};
 	)
+	-- The owner can't remove himself, and so the participants set must contain one more participant
 	pre owner <> u and card participants > 1
+	-- The owner remains the same and the participant was indeed removed
 	post owner = owner~ and participants = participants~ \ {u};
 
-	-- Given a completed workout see if the challenge was completed
+	-- Given a completed workout see if the challenge was completed this function 
+	-- is implemented in each of the subclasses of challenges
 	public completed: Workout ==> bool
 	completed(Workout) == is subclass responsibility;
 
-functions
--- TODO Define functiones here
-traces
--- TODO Define Combinatorial Test Traces here
 end Challenge

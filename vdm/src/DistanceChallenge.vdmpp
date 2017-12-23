@@ -1,13 +1,23 @@
 class DistanceChallenge is subclass of Challenge
+/**
+As the name indicates, a distance challenge is one
+where the user must run at least x meters during
+one workout.
+**/
 instance variables
-
+	
+	-- Distance is the minimun distance that the user must run in order
+	-- to complete this challenge
 	public distance: nat;
 
 operations
 
+	-- Constructor for the subclass DistanceChallenge
 	public DistanceChallenge: Types`String * User * nat ==> DistanceChallenge
 	DistanceChallenge(n, u, d) == 
-	(	
+	(
+	-- These operations must be atomic in order to obey to the invariant
+	-- defined in the Distance class
 	atomic (
 		name := n;
 		owner := u;
@@ -21,13 +31,11 @@ operations
 	-- Given a completed workout see if the challenge was completed
 	public completed: Workout ==> bool
 	completed(workout) == (
+		-- Because this is a distance challenge, the workout's distance must be 
+		-- equal to or bigger than the challenge's distance.
 		if(workout.getDistance() >= distance)
 			then return true;
 		return false;
 	);
 
-functions
--- TODO Define functiones here
-traces
--- TODO Define Combinatorial Test Traces here
 end DistanceChallenge

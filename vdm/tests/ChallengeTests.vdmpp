@@ -1,8 +1,11 @@
 class ChallengeTests is subclass of Test
-types
-values
+/*
+Classes which tests all of the operations from the class
+Challenge and respetive subclasses (DistanceChallenge and RouteChallenge).
+*/
 instance variables
 
+	-- Global is where all the users must be created
 	private global: Global := new Global();
 	private distChallenge: [DistanceChallenge] := nil;
 	private routeChallenge: [RouteChallenge] := nil;
@@ -18,9 +21,11 @@ operations
 		dcl route2: [Types`Route] := mk_Types`Route("Route2", [mk_Types`Point(0,0),mk_Types`Point(0,25),mk_Types`Point(0,50),mk_Types`Point(25,50)]);
 		dcl workout: [Workout] := new WorkoutNew(Math`secondsToTime(10), route1);
 		
+		-- Adding users to the system
 		global.addUser("David");
 		global.addUser("João");
 		
+		-- Storing the user in temporary variables for later use
 		david := global.getUser("David");
 		joao := global.getUser("João");
 		
@@ -38,13 +43,13 @@ operations
 		-- Adding a new point to the workout to complete the 50 meters
 		workout.newGPSPosition(mk_Types`Point(0,50));
 		
-		-- Now the workout has reached 50 meters in length
+		-- Now the workout has reached 50 meters in length and so it completes this challenge
 		assertTrue(distChallenge.completed(workout) = true);
 		
 		-- Testing add participant to a challenge
 		distChallenge.addParticipant(david,joao);
 		
-		-- Checking if the participant was added an the owner remains the same
+		-- Checking if the participant was added and the owner remains the same
 		assertTrue(card distChallenge.getParticipants() = 2);
 		assertTrue(distChallenge.getOwner() = david);
 		assertTrue(distChallenge.getParticipants() = { david, joao });
@@ -52,7 +57,7 @@ operations
 		-- Testing remove self operation
 		distChallenge.removeSelf(joao);
 		
-		-- Checking if every value is as expected
+		-- Checking if every value is as expected and the user was removed
 		assertTrue(card distChallenge.getParticipants() = 1);
 		assertTrue(distChallenge.getOwner() = david);
 		assertTrue(distChallenge.getParticipants() = { david });
@@ -68,7 +73,6 @@ operations
 		assertTrue(distChallenge.getOwner() = david);
 		assertTrue(distChallenge.getParticipants() = { david });
 		
-		
 		-- Testing Route Challenge
 		routeChallenge := new RouteChallenge("BostonMarathon", joao, route2);
 		
@@ -78,7 +82,7 @@ operations
 		assertTrue(routeChallenge.route = route2);
 		assertTrue(routeChallenge.name = "BostonMarathon");
 		
-		-- Checking if the challenge is completed by the workout
+		-- This workout still does not complete the challenge
 		assertTrue(routeChallenge.completed(workout) = false);
 		
 		-- Adding the last GPS point of the route to complete challenge
@@ -92,10 +96,6 @@ operations
 		
 		-- Challenge should still be completed even though the workout was longer
 		assertTrue(routeChallenge.completed(workout) = true);
-		
-		
 	);
 
-functions
-traces
 end ChallengeTests

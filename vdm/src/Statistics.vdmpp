@@ -1,28 +1,35 @@
 class Statistics
-types
--- TODO Define types here
-values
--- TODO Define values here
-	instance variables
+/**
+This class is responsible for storing a given user statistics 
+relative to it's workouts
+**/
+instance variables
 		
+		-- The total distance, in meters, ran by the user
 		private totalDistance: nat := 0;
+		-- The total time the user has ran for
 		private totalRunTime: Types`Timestamp := mk_Types`Timestamp(0,0,0);
+		-- The distance cannot be a negative number
 		inv totalDistance >= 0;
 		
 operations
 
+	-- Function to reset all statistics
 	public reset: () ==> ()
 	reset() == atomic (
-		totalDistance := 0; -- in meters
+		totalDistance := 0;
 		totalRunTime := mk_Types`Timestamp(0,0,0);
 	);
 	
+	-- Returns the total distance
 	public getTotalDistance: () ==> nat
   getTotalDistance() == return totalDistance;
   
+  -- Returns the total ran time
 	public getTotalRunTime: () ==> Types`Timestamp
   getTotalRunTime() == return totalRunTime;	
 	
+	-- Returns the average velocity of the user
 	public getVelocity: () ==> real
   getVelocity() == (
   	if (Math`timeToSeconds(totalRunTime) = 0)
@@ -30,18 +37,16 @@ operations
   	return totalDistance / Math`timeToSeconds(totalRunTime)
 	);
   
+  -- Increments the total time that the user has ran for
   public addTime: Types`Timestamp ==> ()
   addTime(time) == (
   	totalRunTime := Math`secondsToTime(Math`timeToSeconds(time) + Math`timeToSeconds(totalRunTime));
   );
   
+  -- Increments the total distance ran by the user
   public addDistance: nat ==> ()
   addDistance(dist) == (
   	totalDistance := dist + totalDistance;
   );
 
-functions
--- TODO Define functiones here
-traces
--- TODO Define Combinatorial Test Traces here
 end Statistics

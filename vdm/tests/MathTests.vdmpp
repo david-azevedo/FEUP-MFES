@@ -1,10 +1,7 @@
 class MathTests is subclass of Test
-types
-
-values
-
-instance variables
-
+/**
+Class to test the auxiliary class Math
+**/
 operations
 
 	--Tests class Math
@@ -33,10 +30,4 @@ operations
 		
 	);
 	
-
-
-functions
-
-traces
-
 end MathTests

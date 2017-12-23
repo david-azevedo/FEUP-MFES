@@ -1,21 +1,22 @@
 class Global
-types
-	
-values
-	
+/**
+This class is where all the users are registred.
+**/
 instance variables
 	
+	-- List of all Users in the system
 	private users: Types`UserSet;
 	
 operations
 	
-	--Global constructor/
+	--Global class constructor
 	public Global: () ==> Global
 	Global() == (users:= {}; return self);
 	
 	--Adds a new user tied with a name.
 	public addUser: Types`String ==> ()
 	addUser(name) == (users := users union {new User(name, self)})
+	-- This pre condition ensures all users have diffent names
 	pre forall u in set users & u.name <> name;
 	
 	--Removes a new user with a specific name.
@@ -25,7 +26,9 @@ operations
 			if(user.name = name) then
 				users := users \ {user};
 	)
+	-- There must be at least one user in the system to remove him
 	pre card users > 0 and exists1 u in set users & u.name = name
+	-- The user was removed
 	post forall u in set users & u.name <> name;
 	
 	--Lists all the users known.
@@ -45,18 +48,14 @@ operations
 				return user;
 		return nil;
 	)
-	post card users = card users~; -- and user = iota x in set users & x.name = name;
+	post card users = card users~;
 	
+	-- Remove all users from the system
 	public clear: () ==> ()
 	clear() == 
 	(
 			users := {};
 	)
 	post card users = 0;
-	
-functions
-	
-	
-traces
 	
 end Global

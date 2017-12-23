@@ -1,9 +1,10 @@
 class UserTests is subclass of Test
-types
-
-values
-
+/**
+Class to the test all user related operations
+**/
 instance variables
+	
+	-- Global variable where the users are stored
 	private global: Global := new Global();
 	
 operations
@@ -12,8 +13,12 @@ operations
 	public test: () ==> ()
 	test () ==
 	(
+	
+		-- Test the user's friendships
 		testFriendship();
+		-- Test the user's workouts
 		testWorkouts();
+		-- Test the user's challenges
 		testChallenges();
 		
 	);
@@ -35,14 +40,15 @@ operations
 		--Add Friend
 		user.addFriend("David Azevedo");
 		
+		-- The list has 1 friend and that friend is "David Azevedo"
 		stringList:= user.listFriends();
 		assertTrue(len stringList = 1);
 		assertTrue("David Azevedo" in set elems stringList);
 		
 		--Remove Friend
-		
 		user.removeFriend("David Azevedo");
 		
+		-- The user now has no friends
 		stringList:= user.listFriends();
 		assertTrue(len stringList = 0);
 		
@@ -120,16 +126,20 @@ operations
 		
 		-- Adding the friends
 		user.addFriendToChallenge("Valentin", "BostonMarathon");
+		user.addFriendToChallenge("Rodrigo", "BostonMarathon");
 		user.addFriendToChallenge("Rodrigo", "IronMan");
 		
 		-- Checking if everybody has the correct challenges
 		assertTrue(user.listChallenges() = ["IronMan", "MyChallenge", "BostonMarathon"]);
 		assertTrue(friend1.listChallenges() = ["BostonMarathon"]);
-		assertTrue(friend2.listChallenges() = ["IronMan"]);
+		assertTrue(friend2.listChallenges() = ["IronMan", "BostonMarathon"]);
 		
 		-- Removing friends from the challenges
 		user.removeFriendFromChallenge("Valentin", "BostonMarathon");
-		user.removeFriendFromChallenge("Rodrigo", "IronMan");
+		
+		-- Removing himself from the challenge
+		friend2.removeFromChallenge("IronMan");
+		friend2.removeFromChallenge("BostonMarathon");
 	
 		-- Checking if everybody has the correct challenges
 		assertTrue(user.listChallenges() = ["IronMan", "MyChallenge", "BostonMarathon"]);
@@ -162,6 +172,8 @@ operations
 		-- Verifying that the challenge was completed
 		assertTrue(user.listCompletedChallenges() = ["MyChallenge", "BostonMarathon"]);
 		assertTrue(user.getRank() = <SuperFit>);
+		
+		global.clear();
 	);
 	
 	
@@ -185,7 +197,6 @@ operations
 		assertTrue( dom user.getRoutesPerformed() = {});
 		
 		--Start a new Workout
-		
 		user.startWorkout("Route1", 20);
 		
 		--Routes and tops still must be empty
@@ -193,9 +204,8 @@ operations
 		assertTrue( dom user.getTop() = {});
 		assertTrue( dom user.getRoutesPerformed() = {});
 		
-		--Create Route
+		-- Add new coordinates
 		user.updateByGPS(mk_Types`Point(0,0));
-		
 		user.updateByGPS(mk_Types`Point(0,40));
 		
 		-- User should be ranked as lazy
@@ -235,9 +245,8 @@ operations
 		--Route must be Route1
 		assertTrue(user.getCurrentRoute().name = "Route1");
 		
-		--Create Route
+		-- Adding more points to the route
 		user.updateByGPS(mk_Types`Point(0,0));
-		
 		user.updateByGPS(mk_Types`Point(0,40));
 		
 		--Finish with better time
@@ -248,13 +257,11 @@ operations
 		assertTrue( rng user.getTop() = {10});
 		assertTrue( rng user.getRoutesPerformed() = {2});
 		
-		
 		--Start new route
 		user.startWorkout("Route2", 20);
 		
-		--Create Route
+		-- Adding more coordinates to the route
 		user.updateByGPS(mk_Types`Point(0,0));
-		
 		user.updateByGPS(mk_Types`Point(0,40));
 		
 		--Cancel
@@ -273,12 +280,10 @@ operations
 		--Route must be nil
 		assertTrue(user.getCurrentRoute() = nil);
 		
-		
 		--Routes and tops still be the same
 		assertTrue( elems user.listRoutes() = {"Route1"});
 		assertTrue( rng user.getTop() = {10});
 		assertTrue( rng user.getRoutesPerformed() = {2});
-		
 		
 		global.clear();
 	);
