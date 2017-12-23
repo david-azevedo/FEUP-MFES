@@ -56,7 +56,7 @@ public class MainMenu implements IActions {
 					user = global.getUser(args[1]);
 					
 					if(user == null) {
-						Console.Println("User Don't Exists!");
+						Console.Println("User doesn't exist!");
 					}
 					else {
 						userActions = new UserActions(user);
