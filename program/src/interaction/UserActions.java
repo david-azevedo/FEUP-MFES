@@ -125,7 +125,160 @@ public class UserActions extends Actions{
 				}
 				return true;
 			});
-		
+
+		Register("user.challenges.create.distance", "<name> <distance> Create a distance challenge given a name and a distance.",
+				(String[] args) ->
+				{
+					if(args.length != 3)
+						return false;
+
+					try {
+						user.createDistanceChallenge(args[1], Integer.parseInt(args[2]));
+					} catch (Exception e) {
+						return false;
+					}
+					Console.Println("Challenge created successfully!");
+					return true;
+				});
+
+		Register("user.challenges.create.route", "<name> <routeName> Create a route challenge given a name and a route.",
+				(String[] args) ->
+				{
+					if(args.length != 3)
+						return false;
+
+					VDMSeq seq = user.listRoutes();
+					boolean encontrou = false;
+					for(Object entry : seq) {
+						if (entry.toString().equals(args[2]))
+							encontrou = true;
+					};
+
+					if (!encontrou){
+						Console.Println("Route does not exist!");
+					} else {
+						user.createDistanceChallenge(args[1], Integer.getInteger(args[2]));
+						Console.Println("Challenge created successfully!");
+					}
+					return true;
+				});
+
+		Register("user.challenges.list.all", "List all user challenges",
+				(String[] args) ->
+				{
+					Console.Println("Challenges: ");
+
+					for(Object entry : user.listChallenges()){
+						Console.Println("\t" + entry.toString());
+					}
+					return true;
+				});
+
+		Register("user.challenges.list.completed", "List all completed user challenges",
+				(String[] args) ->
+				{
+					Console.Println("Challenges: ");
+
+					for(Object entry : user.listCompletedChallenges()){
+						Console.Println("\t" + entry.toString());
+					}
+					return true;
+				});
+
+		Register("user.rank", "Show user rank",
+				(String[] args) ->
+				{
+					Console.Println("Rank : " + user.getRank().toString());
+					return true;
+				});
+
+		Register("user.challenges.start", "<name> Start a challenge given it's name",
+				(String[] args) ->
+				{
+					if(args.length != 2)
+						return false;
+
+					VDMSeq seq = user.listChallenges();
+					boolean encontrou = false;
+					for(Object entry : seq) {
+						if (entry.toString().equals(args[1]))
+							encontrou = true;
+					};
+
+					if (!encontrou){
+						Console.Println("Challenge does not exist!");
+					} else {
+						user.startChallenge(args[1],System.currentTimeMillis()/1000);
+						workout = new WorkoutActions(user);
+						workout.SetupCommands();
+						Console.Println("Challenge started!");
+					}
+					return true;
+				});
+
+		Register("user.challenges.add", "<friendName> <challengeName> Invite a friend to a challenge",
+				(String[] args) ->
+				{
+					if(args.length != 3)
+						return false;
+
+					VDMSeq seq = user.listFriends();
+					boolean encontrou = false;
+					for(Object entry : seq) {
+						if (entry.toString().equals(args[1]))
+							encontrou = true;
+					};
+					if (!encontrou){
+						Console.Println("Friend does not exist!");
+					} else {
+						encontrou = false;
+						seq = user.listChallenges();
+						for(Object entry : seq) {
+							if (entry.toString().equals(args[2]))
+								encontrou = true;
+						};
+
+						if (!encontrou){
+							Console.Println("Challenge does not exist!");
+						} else {
+							user.addFriendToChallenge(args[1], args[2]);
+							Console.Println("Friend Invited!");
+						}
+					}
+					return true;
+				});
+
+		Register("user.challenges.remove", "<friendName> <challengeName> Remove a friend from a challenge",
+				(String[] args) ->
+				{
+					if(args.length != 3)
+						return false;
+
+					VDMSeq seq = user.listFriends();
+					boolean encontrou = false;
+					for(Object entry : seq) {
+						if (entry.toString().equals(args[1]))
+							encontrou = true;
+					};
+					if (!encontrou){
+						Console.Println("Friend does not exist!");
+					} else {
+						encontrou = false;
+						seq = user.listChallenges();
+						for(Object entry : seq) {
+							if (entry.toString().equals(args[2]))
+								encontrou = true;
+						};
+
+						if (!encontrou){
+							Console.Println("Challenge does not exist!");
+						} else {
+							user.removeFriendFromChallenge(args[1], args[2]);
+							Console.Println("Friend Invited!");
+						}
+					}
+					return true;
+				});
 	}
 	
 	@Override

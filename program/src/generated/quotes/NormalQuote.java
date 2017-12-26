@@ -1,5 +1,4 @@
-package quotes;
-
+package generated.quotes;
 import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")

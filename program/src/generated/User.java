@@ -1,3 +1,4 @@
+package generated;
 
 import java.util.*;
 import org.overture.codegen.runtime.*;
@@ -34,7 +35,7 @@ public class User {
     completedChallenges = SetUtil.set();
     owner = SetUtil.set();
     participation = SetUtil.set();
-    rank = quotes.LazyQuote.getInstance();
+    rank = generated.quotes.LazyQuote.getInstance();
     return;
   }
 
@@ -112,16 +113,16 @@ public class User {
             + statistics.getTotalDistance().longValue() * User.DISTANCEMULTIPLIER.longValue()
             + completedChallenges.size() * User.CHALLENGEVALUE.longValue();
     if (value.longValue() >= User.FORRESTGUMP.longValue()) {
-      rank = quotes.ForrestGumpQuote.getInstance();
+      rank = generated.quotes.ForrestGumpQuote.getInstance();
     } else {
       if (value.longValue() >= User.SUPERFIT.longValue()) {
-        rank = quotes.SuperFitQuote.getInstance();
+        rank = generated.quotes.SuperFitQuote.getInstance();
       } else {
         if (value.longValue() >= User.ACTIVE.longValue()) {
-          rank = quotes.ActiveQuote.getInstance();
+          rank = generated.quotes.ActiveQuote.getInstance();
         } else {
           if (value.longValue() >= User.NORMAL.longValue()) {
-            rank = quotes.NormalQuote.getInstance();
+            rank = generated.quotes.NormalQuote.getInstance();
           }
         }
       }
