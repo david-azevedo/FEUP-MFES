@@ -21,7 +21,7 @@ operations
 		-- Test the user's challenges
 		testChallenges();
 		-- SHOULD FAIL Cannot add itself
-		testCannotAddSelf();
+		--testCannotAddSelf();
 		
 	);
 	
