@@ -1,4 +1,3 @@
-package generated;
 
 import java.util.*;
 import org.overture.codegen.runtime.*;
@@ -25,8 +24,8 @@ public class Global {
 
   public void removeUser(final String name) {
 
-    for (Iterator iterator_18 = users.iterator(); iterator_18.hasNext(); ) {
-      User user = (User) iterator_18.next();
+    for (Iterator iterator_22 = users.iterator(); iterator_22.hasNext(); ) {
+      User user = (User) iterator_22.next();
       if (Utils.equals(user.name, name)) {
         users = SetUtil.diff(Utils.copy(users), SetUtil.set(user));
       }
@@ -36,8 +35,8 @@ public class Global {
   public VDMSeq listUsers() {
 
     VDMSeq result = SeqUtil.seq();
-    for (Iterator iterator_19 = users.iterator(); iterator_19.hasNext(); ) {
-      User user = (User) iterator_19.next();
+    for (Iterator iterator_23 = users.iterator(); iterator_23.hasNext(); ) {
+      User user = (User) iterator_23.next();
       result = SeqUtil.conc(Utils.copy(result), SeqUtil.seq(user.name));
     }
     return Utils.copy(result);
@@ -45,8 +44,8 @@ public class Global {
 
   public User getUser(final String name) {
 
-    for (Iterator iterator_20 = users.iterator(); iterator_20.hasNext(); ) {
-      User user = (User) iterator_20.next();
+    for (Iterator iterator_24 = users.iterator(); iterator_24.hasNext(); ) {
+      User user = (User) iterator_24.next();
       if (Utils.equals(user.name, name)) {
         return user;
       }

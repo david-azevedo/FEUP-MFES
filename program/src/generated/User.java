@@ -1,4 +1,3 @@
-package generated;
 
 import java.util.*;
 import org.overture.codegen.runtime.*;
@@ -35,7 +34,7 @@ public class User {
     completedChallenges = SetUtil.set();
     owner = SetUtil.set();
     participation = SetUtil.set();
-    rank = generated.quotes.LazyQuote.getInstance();
+    rank = quotes.LazyQuote.getInstance();
     return;
   }
 
@@ -44,19 +43,22 @@ public class User {
     cg_init_User_1(n, g);
   }
 
-  public void startChallenge(final String cName) {
+  public void removeFromChallenge(final String cName) {
 
     Challenge iotaExp_1 = null;
     Long iotaCounter_1 = 0L;
-    VDMSet set_5 = SetUtil.union(Utils.copy(owner), Utils.copy(participation));
-    for (Iterator iterator_5 = set_5.iterator(); iterator_5.hasNext(); ) {
-      Challenge challenge = ((Challenge) iterator_5.next());
-      if (Utils.equals(challenge.name, cName)) {
+    VDMSet set_6 =
+        SetUtil.diff(
+            SetUtil.diff(Utils.copy(participation), Utils.copy(owner)),
+            Utils.copy(completedChallenges));
+    for (Iterator iterator_6 = set_6.iterator(); iterator_6.hasNext(); ) {
+      Challenge c = ((Challenge) iterator_6.next());
+      if (Utils.equals(c.name, cName)) {
         iotaCounter_1++;
         if (iotaCounter_1.longValue() > 1L) {
           throw new RuntimeException("Iota selects more than one result");
         } else {
-          iotaExp_1 = challenge;
+          iotaExp_1 = c;
         }
       }
     }
@@ -64,17 +66,41 @@ public class User {
       throw new RuntimeException("Iota selects more than one result");
     }
 
-    Challenge myChallenge = iotaExp_1;
-    Types.Timestamp time = new Types.Timestamp(0L, 0L, 0L);
+    Challenge cha = iotaExp_1;
+    cha.removeSelf(this);
+    participation = SetUtil.diff(Utils.copy(participation), SetUtil.set(cha));
+  }
+
+  public void startChallenge(final String cName, final Number time) {
+
+    Challenge iotaExp_2 = null;
+    Long iotaCounter_2 = 0L;
+    VDMSet set_8 = SetUtil.union(Utils.copy(owner), Utils.copy(participation));
+    for (Iterator iterator_8 = set_8.iterator(); iterator_8.hasNext(); ) {
+      Challenge challenge = ((Challenge) iterator_8.next());
+      if (Utils.equals(challenge.name, cName)) {
+        iotaCounter_2++;
+        if (iotaCounter_2.longValue() > 1L) {
+          throw new RuntimeException("Iota selects more than one result");
+        } else {
+          iotaExp_2 = challenge;
+        }
+      }
+    }
+    if (Utils.equals(iotaCounter_2, 0L)) {
+      throw new RuntimeException("Iota selects more than one result");
+    }
+
+    Challenge myChallenge = iotaExp_2;
     Types.Route route = null;
     if (myChallenge instanceof DistanceChallenge) {
       route = new Types.Route(cName, SeqUtil.seq());
-      currentWorkout = new WorkoutNew(Utils.copy(time), Utils.copy(route));
+      currentWorkout = new WorkoutNew(Math.secondsToTime(time), Utils.copy(route));
 
     } else {
       if (myChallenge instanceof RouteChallenge) {
         currentWorkout =
-            new WorkoutExisting(Utils.copy(time), ((RouteChallenge) myChallenge).route);
+            new WorkoutExisting(Math.secondsToTime(time), ((RouteChallenge) myChallenge).route);
       }
     }
   }
@@ -86,16 +112,16 @@ public class User {
             + statistics.getTotalDistance().longValue() * User.DISTANCEMULTIPLIER.longValue()
             + completedChallenges.size() * User.CHALLENGEVALUE.longValue();
     if (value.longValue() >= User.FORRESTGUMP.longValue()) {
-      rank = generated.quotes.ForrestGumpQuote.getInstance();
+      rank = quotes.ForrestGumpQuote.getInstance();
     } else {
       if (value.longValue() >= User.SUPERFIT.longValue()) {
-        rank = generated.quotes.SuperFitQuote.getInstance();
+        rank = quotes.SuperFitQuote.getInstance();
       } else {
         if (value.longValue() >= User.ACTIVE.longValue()) {
-          rank = generated.quotes.ActiveQuote.getInstance();
+          rank = quotes.ActiveQuote.getInstance();
         } else {
           if (value.longValue() >= User.NORMAL.longValue()) {
-            rank = generated.quotes.NormalQuote.getInstance();
+            rank = quotes.NormalQuote.getInstance();
           }
         }
       }
@@ -109,14 +135,14 @@ public class User {
 
   private void finishChallenges(final Workout workout) {
 
-    for (Iterator iterator_21 =
+    for (Iterator iterator_25 =
             SetUtil.diff(
                     SetUtil.union(Utils.copy(owner), Utils.copy(participation)),
                     Utils.copy(completedChallenges))
                 .iterator();
-        iterator_21.hasNext();
+        iterator_25.hasNext();
         ) {
-      Challenge challenge = (Challenge) iterator_21.next();
+      Challenge challenge = (Challenge) iterator_25.next();
       if (challenge.completed(workout)) {
         completedChallenges =
             SetUtil.union(Utils.copy(completedChallenges), SetUtil.set(challenge));
@@ -146,8 +172,8 @@ public class User {
 
   public void addFriendToChallenge(final String friendName, final String challengeName) {
 
-    for (Iterator iterator_22 = owner.iterator(); iterator_22.hasNext(); ) {
-      Challenge c = (Challenge) iterator_22.next();
+    for (Iterator iterator_26 = owner.iterator(); iterator_26.hasNext(); ) {
+      Challenge c = (Challenge) iterator_26.next();
       if (Utils.equals(c.name, challengeName)) {
         c.addParticipant(this, global.getUser(friendName));
         global.getUser(friendName).addChallenge(c);
@@ -157,8 +183,8 @@ public class User {
 
   public void removeFriendFromChallenge(final String friendName, final String challengeName) {
 
-    for (Iterator iterator_23 = owner.iterator(); iterator_23.hasNext(); ) {
-      Challenge c = (Challenge) iterator_23.next();
+    for (Iterator iterator_27 = owner.iterator(); iterator_27.hasNext(); ) {
+      Challenge c = (Challenge) iterator_27.next();
       if (Utils.equals(c.name, challengeName)) {
         c.removeParticipant(this, global.getUser(friendName));
         global.getUser(friendName).removeChallenge(c);
@@ -173,27 +199,27 @@ public class User {
 
   public void createRouteChallenge(final String n, final String routeName) {
 
-    Types.Route iotaExp_3 = null;
-    Long iotaCounter_3 = 0L;
-    VDMSet set_15 = MapUtil.dom(Utils.copy(routes));
-    for (Iterator iterator_15 = set_15.iterator(); iterator_15.hasNext(); ) {
-      Types.Route route = ((Types.Route) iterator_15.next());
+    Types.Route iotaExp_4 = null;
+    Long iotaCounter_4 = 0L;
+    VDMSet set_19 = MapUtil.dom(Utils.copy(routes));
+    for (Iterator iterator_19 = set_19.iterator(); iterator_19.hasNext(); ) {
+      Types.Route route = ((Types.Route) iterator_19.next());
       if (Utils.equals(route.name, routeName)) {
-        iotaCounter_3++;
-        if (iotaCounter_3.longValue() > 1L) {
+        iotaCounter_4++;
+        if (iotaCounter_4.longValue() > 1L) {
           throw new RuntimeException("Iota selects more than one result");
         } else {
-          iotaExp_3 = Utils.copy(route);
+          iotaExp_4 = Utils.copy(route);
         }
       }
     }
-    if (Utils.equals(iotaCounter_3, 0L)) {
+    if (Utils.equals(iotaCounter_4, 0L)) {
       throw new RuntimeException("Iota selects more than one result");
     }
 
     owner =
         SetUtil.union(
-            Utils.copy(owner), SetUtil.set(new RouteChallenge(n, this, Utils.copy(iotaExp_3))));
+            Utils.copy(owner), SetUtil.set(new RouteChallenge(n, this, Utils.copy(iotaExp_4))));
   }
 
   public void addFriend(final String n) {
@@ -212,8 +238,8 @@ public class User {
 
   public void removeFriend(final String n) {
 
-    for (Iterator iterator_24 = friends.iterator(); iterator_24.hasNext(); ) {
-      User f = (User) iterator_24.next();
+    for (Iterator iterator_28 = friends.iterator(); iterator_28.hasNext(); ) {
+      User f = (User) iterator_28.next();
       if (Utils.equals(f.name, n)) {
         removeFriend(f);
         f.removeFriend(this);
@@ -229,8 +255,8 @@ public class User {
   public VDMSeq listFriends() {
 
     VDMSeq result = SeqUtil.seq();
-    for (Iterator iterator_25 = friends.iterator(); iterator_25.hasNext(); ) {
-      User friend = (User) iterator_25.next();
+    for (Iterator iterator_29 = friends.iterator(); iterator_29.hasNext(); ) {
+      User friend = (User) iterator_29.next();
       result = SeqUtil.conc(Utils.copy(result), SeqUtil.seq(friend.name));
     }
     return Utils.copy(result);
@@ -240,10 +266,10 @@ public class User {
 
     Types.Timestamp time = Math.secondsToTime(startTime);
     Types.Route route = null;
-    for (Iterator iterator_26 = MapUtil.dom(Utils.copy(routes)).iterator();
-        iterator_26.hasNext();
+    for (Iterator iterator_30 = MapUtil.dom(Utils.copy(routes)).iterator();
+        iterator_30.hasNext();
         ) {
-      Types.Route r = (Types.Route) iterator_26.next();
+      Types.Route r = (Types.Route) iterator_30.next();
       if (Utils.equals(r.name, routeName)) {
         route = Utils.copy(r);
       }
@@ -270,18 +296,18 @@ public class User {
 
     VDMMap pair = MapUtil.domResTo(SetUtil.set(workout.getRoute()), Utils.copy(top));
     if (!(Utils.empty(pair))) {
-      Long exists1Counter_3 = 0L;
-      VDMSet set_17 = MapUtil.rng(Utils.copy(pair));
-      for (Iterator iterator_17 = set_17.iterator();
-          iterator_17.hasNext() && (exists1Counter_3.longValue() < 2L);
+      Long exists1Counter_4 = 0L;
+      VDMSet set_21 = MapUtil.rng(Utils.copy(pair));
+      for (Iterator iterator_21 = set_21.iterator();
+          iterator_21.hasNext() && (exists1Counter_4.longValue() < 2L);
           ) {
-        Workout t = ((Workout) iterator_17.next());
+        Workout t = ((Workout) iterator_21.next());
         if (Math.timeToSeconds(t.calculateTime()).longValue()
             > Math.timeToSeconds(workout.calculateTime()).longValue()) {
-          exists1Counter_3++;
+          exists1Counter_4++;
         }
       }
-      if (Utils.equals(exists1Counter_3, 1L)) {
+      if (Utils.equals(exists1Counter_4, 1L)) {
         top =
             MapUtil.override(Utils.copy(top), MapUtil.map(new Maplet(workout.getRoute(), workout)));
       }
@@ -297,10 +323,10 @@ public class User {
     VDMMap pair = MapUtil.domResTo(SetUtil.set(currentWorkout.getRoute()), Utils.copy(routes));
     updateTop(currentWorkout);
     if (!(Utils.empty(pair))) {
-      for (Iterator iterator_27 = MapUtil.rng(Utils.copy(pair)).iterator();
-          iterator_27.hasNext();
+      for (Iterator iterator_31 = MapUtil.rng(Utils.copy(pair)).iterator();
+          iterator_31.hasNext();
           ) {
-        VDMSeq e = (VDMSeq) iterator_27.next();
+        VDMSeq e = (VDMSeq) iterator_31.next();
         routes =
             MapUtil.override(
                 Utils.copy(routes),
@@ -319,16 +345,16 @@ public class User {
   public VDMMap getRoutesPerformed() {
 
     VDMMap res = MapUtil.map();
-    for (Iterator iterator_28 = MapUtil.dom(Utils.copy(routes)).iterator();
-        iterator_28.hasNext();
+    for (Iterator iterator_32 = MapUtil.dom(Utils.copy(routes)).iterator();
+        iterator_32.hasNext();
         ) {
-      Types.Route route = (Types.Route) iterator_28.next();
-      for (Iterator iterator_29 =
+      Types.Route route = (Types.Route) iterator_32.next();
+      for (Iterator iterator_33 =
               MapUtil.rng(MapUtil.domResTo(SetUtil.set(Utils.copy(route)), Utils.copy(routes)))
                   .iterator();
-          iterator_29.hasNext();
+          iterator_33.hasNext();
           ) {
-        VDMSeq workouts = (VDMSeq) iterator_29.next();
+        VDMSeq workouts = (VDMSeq) iterator_33.next();
         res =
             MapUtil.override(
                 Utils.copy(res), MapUtil.map(new Maplet(Utils.copy(route), workouts.size())));
@@ -340,14 +366,14 @@ public class User {
   public VDMMap getTop() {
 
     VDMMap res = MapUtil.map();
-    for (Iterator iterator_30 = MapUtil.dom(Utils.copy(top)).iterator(); iterator_30.hasNext(); ) {
-      Types.Route route = (Types.Route) iterator_30.next();
-      for (Iterator iterator_31 =
+    for (Iterator iterator_34 = MapUtil.dom(Utils.copy(top)).iterator(); iterator_34.hasNext(); ) {
+      Types.Route route = (Types.Route) iterator_34.next();
+      for (Iterator iterator_35 =
               MapUtil.rng(MapUtil.domResTo(SetUtil.set(Utils.copy(route)), Utils.copy(top)))
                   .iterator();
-          iterator_31.hasNext();
+          iterator_35.hasNext();
           ) {
-        Workout workout = (Workout) iterator_31.next();
+        Workout workout = (Workout) iterator_35.next();
         res =
             MapUtil.override(
                 Utils.copy(res),
@@ -361,10 +387,10 @@ public class User {
   public VDMSeq listRoutes() {
 
     VDMSeq res = SeqUtil.seq();
-    for (Iterator iterator_32 = MapUtil.dom(Utils.copy(routes)).iterator();
-        iterator_32.hasNext();
+    for (Iterator iterator_36 = MapUtil.dom(Utils.copy(routes)).iterator();
+        iterator_36.hasNext();
         ) {
-      Types.Route e = (Types.Route) iterator_32.next();
+      Types.Route e = (Types.Route) iterator_36.next();
       res = SeqUtil.conc(Utils.copy(res), SeqUtil.seq(e.name));
     }
     return Utils.copy(res);
@@ -373,11 +399,11 @@ public class User {
   public VDMSeq listChallenges() {
 
     VDMSeq res = SeqUtil.seq();
-    for (Iterator iterator_33 =
+    for (Iterator iterator_37 =
             SetUtil.union(Utils.copy(owner), Utils.copy(participation)).iterator();
-        iterator_33.hasNext();
+        iterator_37.hasNext();
         ) {
-      Challenge e = (Challenge) iterator_33.next();
+      Challenge e = (Challenge) iterator_37.next();
       res = SeqUtil.conc(Utils.copy(res), SeqUtil.seq(e.name));
     }
     return Utils.copy(res);
@@ -386,8 +412,8 @@ public class User {
   public VDMSeq listCompletedChallenges() {
 
     VDMSeq res = SeqUtil.seq();
-    for (Iterator iterator_34 = completedChallenges.iterator(); iterator_34.hasNext(); ) {
-      Challenge e = (Challenge) iterator_34.next();
+    for (Iterator iterator_38 = completedChallenges.iterator(); iterator_38.hasNext(); ) {
+      Challenge e = (Challenge) iterator_38.next();
       res = SeqUtil.conc(Utils.copy(res), SeqUtil.seq(e.name));
     }
     return Utils.copy(res);

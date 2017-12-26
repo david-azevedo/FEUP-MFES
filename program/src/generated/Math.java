@@ -1,12 +1,9 @@
-package generated;
 
 import java.util.*;
 import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class Math {
-  public static final Number EPS = 1.0E-15;
-
   public static Number sqrt(final Number v) {
 
     Number eps = 1.0E-15;
@@ -66,6 +63,6 @@ public class Math {
 
   public String toString() {
 
-    return "Math{" + "EPS = " + Utils.toString(EPS) + "}";
+    return "Math{}";
   }
 }

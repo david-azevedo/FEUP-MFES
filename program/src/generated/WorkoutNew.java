@@ -1,4 +1,3 @@
-package generated;
 
 import java.util.*;
 import org.overture.codegen.runtime.*;
@@ -59,10 +58,10 @@ public class WorkoutNew extends Workout {
     }
 
     tmp = Utils.copy(((Types.Point) route.route.get(0)));
-    for (Iterator iterator_35 = SeqUtil.tail(Utils.copy(route.route)).iterator();
-        iterator_35.hasNext();
+    for (Iterator iterator_39 = SeqUtil.tail(Utils.copy(route.route)).iterator();
+        iterator_39.hasNext();
         ) {
-      Types.Point point = (Types.Point) iterator_35.next();
+      Types.Point point = (Types.Point) iterator_39.next();
       {
         distance =
             distance.doubleValue()

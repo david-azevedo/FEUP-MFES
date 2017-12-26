@@ -183,7 +183,7 @@ operations
 		assertTrue(friend2.listChallenges() = []);
 		
 		-- Starting a challenge
-		user.startChallenge("MyChallenge");
+		user.startChallenge("MyChallenge",0);
 		
 		-- Running the 50meters distance to complete the challenge
 		user.updateByGPS(mk_Types`Point(0,0));
@@ -196,7 +196,7 @@ operations
 		assertTrue(user.listCompletedChallenges() = ["MyChallenge"]);
 		
 		-- Starting a route challenge for route3 create above
-		user.startChallenge("BostonMarathon");
+		user.startChallenge("BostonMarathon",0);
 		
 		-- Points of route3
 		user.updateByGPS(mk_Types`Point(0,0));

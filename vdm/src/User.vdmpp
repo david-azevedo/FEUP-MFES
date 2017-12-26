@@ -80,20 +80,19 @@ operations
 	post card participation = card participation~ - 1 and forall challenge in set (participation \ owner) \ completedChallenges & challenge.name <> cName;
 	
 	-- User starts a workout based on a challenge which he was challenged to
-	public startChallenge: Types`String ==> ()
-	startChallenge(cName) ==
+	public startChallenge: Types`String * nat ==> ()
+	startChallenge(cName, time) ==
 	(
 		dcl myChallenge: Challenge := iota challenge in set owner union participation & challenge.name = cName;
-		dcl time: Types`Timestamp := mk_Types`Timestamp(0,0,0);
 		dcl route: [Types`Route] := nil;
 		
 		if (isofclass(DistanceChallenge, myChallenge)) then
 		(
 			route := mk_Types`Route(cName, []);
-			currentWorkout := new WorkoutNew(time, route);
+			currentWorkout := new WorkoutNew(Math`secondsToTime(time), route);
 		) else if (isofclass(RouteChallenge, myChallenge)) then
 		(
-			currentWorkout := new WorkoutExisting(time, narrow_(myChallenge,RouteChallenge).route);
+			currentWorkout := new WorkoutExisting(Math`secondsToTime(time), narrow_(myChallenge,RouteChallenge).route);
 		);
 	)
 	-- The user can't be currently doing a workout and he must take part the challenge he is about to start

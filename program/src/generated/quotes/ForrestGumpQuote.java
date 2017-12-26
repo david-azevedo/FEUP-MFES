@@ -1,4 +1,4 @@
-package generated.quotes;
+package quotes;
 
 import org.overture.codegen.runtime.*;
 
