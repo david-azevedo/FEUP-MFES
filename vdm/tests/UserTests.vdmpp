@@ -21,8 +21,7 @@ operations
 		-- Test the user's challenges
 		testChallenges();
 		-- SHOULD FAIL Cannot add itself
-		--testCannotAddSelf();
-		
+		-- testCannotAddSelf();
 	);
 	
 	public testCannotAddSelf: () ==> ()
@@ -36,7 +35,7 @@ operations
 		global.addUser("User1");
 		user:= global.getUser("User1");
 		
-		--SHOULD FAIL Cannot add itself
+		--SHOULD FAIL Cannot add itself (Uncomment to test)
 		user.addFriend("User1");
 	);
 	
