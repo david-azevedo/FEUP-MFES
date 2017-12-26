@@ -23,11 +23,11 @@ operations
 		
 		-- Adding users to the system
 		global.addUser("David");
-		global.addUser("João");
+		global.addUser("Joao");
 		
 		-- Storing the user in temporary variables for later use
 		david := global.getUser("David");
-		joao := global.getUser("João");
+		joao := global.getUser("Joao");
 		
 		-- Creating a distance challenge where david is the owner
 		distChallenge := new DistanceChallenge("IronMan",david,50);

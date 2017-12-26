@@ -240,7 +240,8 @@ operations
 		owner := owner union {new RouteChallenge(n, self, iota route in set dom routes & route.name = routeName)};
 	)
 	-- There can't already be a challenge with the same name
-	pre not exists challenge in set owner & challenge.name = n
+	-- And the route must be in the user's route list
+	pre exists route in set dom routes & route.name = routeName and not exists challenge in set owner & challenge.name = n
 	-- As the challenge was created the owner set should have one more
 	-- element. And the newly created challenge should have the correct route.
 	post card owner = card owner~ + 1 and

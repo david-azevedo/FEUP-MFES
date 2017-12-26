@@ -47,11 +47,11 @@ operations
 		--Fill Global With Users()
 		global.clear();
 		
-		global.addUser("Jo�o Ferreira");
+		global.addUser("Joao Ferreira");
 		global.addUser("David Azevedo");
 		
 		--Retrive User:
-		user := global.getUser("Jo�o Ferreira");
+		user := global.getUser("Joao Ferreira");
 		
 		--Add Friend
 		user.addFriend("David Azevedo");
@@ -152,6 +152,26 @@ operations
 		
 		-- Removing friends from the challenges
 		user.removeFriendFromChallenge("Valentin", "BostonMarathon");
+		
+/*
+		-- The following tests are supossed to fail and each references a restriction
+		-- from the requirements list. 
+		
+		-- This test should fail because you cannot remove a friend from a challenge which he does not participate in (Uncomment to test)
+		user.removeFriendFromChallenge("Valentin", "BostonMarathon");
+		
+		-- This test should fail because you cannot start a challenge that you aren't participating in (Uncomment to test)
+		friend1.startChallenge("BostonMarathon");
+		
+		-- This test should fail because you cannot add a friend to a challenge when you are not the owner (Uncomment to test)
+		friend2.addFriendToChallenge("Vasco","IronMan");
+		
+		-- This test should fail becausa you cannot create a route challenge with a route you don't have (Uncomment to test)
+		user.createRouteChallenge("Unnamed","No name exists");
+		
+		-- This test should fail because the user cannot remove himself from a challenge he owns (Uncomment to test)
+		user.removeFromChallenge("MyChallenge");
+*/
 		
 		-- Removing himself from the challenge
 		friend2.removeFromChallenge("IronMan");
