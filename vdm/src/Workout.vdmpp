@@ -53,6 +53,7 @@ operations
 	(
 		endTime := time
 	)
+	pre Math`timeToSeconds(time) >= Math`timeToSeconds(startTime)
 	post endTime = time;
 	
 	-- Calculates the average velocity 
