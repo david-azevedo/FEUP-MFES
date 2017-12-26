@@ -38,9 +38,10 @@ public class UserActions extends Actions{
 			(String[] args) -> 
 			{
 				try {
-					user.addFriend(args[1]);
-					
-					Console.Println("User " + args[1] + " added!");
+					if(!user.name.toString().equals(args[1]))
+						user.addFriend(args[1]);
+					else 
+						Console.Println("Command Executed!");
 				} catch (Exception e) {
 					Console.Println("User " + args[1] + " not found!");
 				}
