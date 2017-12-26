@@ -161,7 +161,7 @@ operations
 		user.removeFriendFromChallenge("Valentin", "BostonMarathon");
 		
 		-- This test should fail because you cannot start a challenge that you aren't participating in (Uncomment to test)
-		friend1.startChallenge("BostonMarathon");
+		friend1.startChallenge("BostonMarathon",0);
 		
 		-- This test should fail because you cannot add a friend to a challenge when you are not the owner (Uncomment to test)
 		friend2.addFriendToChallenge("Vasco","IronMan");
