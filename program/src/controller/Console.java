@@ -1,7 +1,10 @@
 package controller;
 
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 
@@ -18,8 +21,10 @@ public class Console{
 		public boolean call(String[] s) {
 			if(s.length == 1) {
 				Println("Commands:");
-				for(Map.Entry<String, String> obj : explanations.entrySet()) {
-					Println(obj.getKey() + "\t" + obj.getValue());
+				List<String> keys = new ArrayList<>(explanations.keySet());
+				Collections.sort(keys);
+				for(String key : keys) {
+					Println(key + "\t" + explanations.get(key));
 				}
 			}else if(s.length == 2) {
 				if(explanations.containsKey(s[1])) {
