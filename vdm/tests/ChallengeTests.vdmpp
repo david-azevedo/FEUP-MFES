@@ -57,6 +57,9 @@ operations
 		-- Testing remove self operation
 		distChallenge.removeSelf(joao);
 		
+		-- This test will fail because the owner can't remove himself from the challenge (Uncomment to test)
+		-- distChallenge.removeSelf(david);
+		
 		-- Checking if every value is as expected and the user was removed
 		assertTrue(card distChallenge.getParticipants() = 1);
 		assertTrue(distChallenge.getOwner() = david);
